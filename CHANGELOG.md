@@ -15,3 +15,9 @@ All notable changes to contextcrucible are documented here. The format follows
 - token assay with per-file relevance grades
 - secret spark-test gate before packing
 - TypeScript budget explorer (`explorer/`, dependency-free)
+
+### Verified
+- `cargo test` green (52 unit + 5 lib + 8 pipeline tests)
+- explorer `npm test` green (9 tests)
+
+## [0.6.0] - 2025-06-19
