@@ -9,3 +9,9 @@ All notable changes to contextcrucible are documented here. The format follows
 - planning: budget presets per model family
 
 ## [1.0.0] - 2026-07-08
+
+### Added
+- frozen manifest schema (every gram of the context pack accounted for)
+- token assay with per-file relevance grades
+- secret spark-test gate before packing
+- TypeScript budget explorer (`explorer/`, dependency-free)
