@@ -36,3 +36,18 @@ There are **no embeddings, no learned models, and no network calls** — every
 point of relevance is traceable to a concrete token match you can read yourself.
 
 <p align="center">
+  <img src="docs/assets/budget-smelter.svg" alt="Animated bars showing a token budget poured into the highest-grade files first" width="90%" />
+</p>
+
+---
+
+## The seven stages of the pour
+
+```
+   ore body                                                        context pack
+  ┌────────┐   scan      tokens     score      secrets    budget   ┌──────────┐
+  │  repo  │ ────────▶ ────────▶ ────────▶ ────────▶ ────────▶ ──▶ │  pack +  │
+  └────────┘  reject   assay      grade      quarantine  pour      │ manifest │
+              slag     mass       relevance  credentials           └──────────┘
+```
+
