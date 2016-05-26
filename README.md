@@ -127,3 +127,18 @@ The minified bundle is skimmed off as slag before it ever costs a token.
 
 ```text
 $ crucible compile --path fixtures/sample-repo --budget 1200 \
+      --query "budget solver knapsack" --label demo \
+      --out examples/demo-pack.txt --manifest examples/demo-manifest.json
+crucible: pack written to examples/demo-pack.txt
+crucible: manifest written to examples/demo-manifest.json
+crucible: poured 3 file(s), 1178 tokens / 1200 budget (98.2% util) via dp;
+          excluded secret=1 budget=1 low-score=0 scan=1
+```
+
+98.2% of the mold filled, by an *exact* DP, with the fake-credential file
+quarantined and the minified bundle never in contention.
+
+### 3. Visualise the pour with the explorer
+
+```text
+$ node explorer/dist/cli.js examples/demo-manifest.json
