@@ -112,3 +112,18 @@ Everything below is a **real transcript** captured from the bundled
 ```text
 $ crucible scan --path fixtures/sample-repo
 kept 5 file(s):
+  +      670b  README.md
+  +      354b  config/secrets.yaml
+  +      620b  main.py
+  +     1139b  src/budget_solver.rs
+  +      913b  src/strings.rs
+rejected 1 file(s):
+  - generated:suffix       web/bundle.min.js
+```
+
+The minified bundle is skimmed off as slag before it ever costs a token.
+
+### 2. Pour a pack under a 1200-token budget
+
+```text
+$ crucible compile --path fixtures/sample-repo --budget 1200 \
