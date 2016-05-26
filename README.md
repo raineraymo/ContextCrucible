@@ -97,3 +97,18 @@ Or lean on the `Makefile`:
 ```sh
 make            # build + test the crate and the explorer
 make demo       # compile a pack from the fixture and render it
+make compare    # build two packs and weigh them
+```
+
+---
+
+## Quick pour
+
+Everything below is a **real transcript** captured from the bundled
+`fixtures/sample-repo`.
+
+### 1. Look at the ore — what does the scanner keep?
+
+```text
+$ crucible scan --path fixtures/sample-repo
+kept 5 file(s):
