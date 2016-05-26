@@ -82,3 +82,18 @@ point of relevance is traceable to a concrete token match you can read yourself.
 
 ## Install &amp; build
 
+The core needs only a Rust toolchain (1.74 or newer). The explorer needs Node 18+.
+
+```sh
+# build the CLI
+cargo build --release        # binary at target/release/crucible
+
+# build the explorer
+cd explorer && npm install && npm run build && cd ..
+```
+
+Or lean on the `Makefile`:
+
+```sh
+make            # build + test the crate and the explorer
+make demo       # compile a pack from the fixture and render it
