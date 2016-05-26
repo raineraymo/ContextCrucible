@@ -67,3 +67,18 @@ point of relevance is traceable to a concrete token match you can read yourself.
    explain each grade.
 4. **secrets** — rule-based spark tests for AWS keys, PEM private keys, GitHub
    and Slack tokens, JWTs, and a generic *high-entropy assignment to a secret-
+   looking name*. Placeholders like `changeme` or `${VAR}` are deliberately
+   ignored. Any finding at or above 0.75 confidence quarantines the whole file.
+5. **budget** — the pour itself: an exact 0/1 knapsack solved by dynamic
+   programming over a quantised capacity grid, with a deterministic
+   value-density greedy fallback for very large inputs. The hard token bound is
+   enforced after reconstruction, always.
+6. **pack** — the selected files, concatenated in fill order with clear
+   delimiters, ready to paste into an agent.
+7. **manifest** — a byte-stable JSON audit trail: every include and exclude,
+   why, and at what token cost. See [`docs/PACK.md`](docs/PACK.md).
+
+---
+
+## Install &amp; build
+
