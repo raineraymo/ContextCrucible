@@ -142,3 +142,19 @@ quarantined and the minified bundle never in contention.
 
 ```text
 $ node explorer/dist/cli.js examples/demo-manifest.json
+╔══════════════════════════════════════════════════════════════╗
+║ contextcrucible pack :: demo                                  ║
+╚══════════════════════════════════════════════════════════════╝
+  query          : budget solver knapsack
+  solver         : dp
+  budget         : 1178 / 1200 tokens  (98.2% utilised)
+  captured value : 125.3
+  decisions      : 3 in · 1 secret · 1 budget · 0 low-score · 1 scan
+
+  Allocation by directory
+  ────────────────────────────────────────────────────────────
+  <root>         ████████████████··············    632t  53.7% (2)
+  src            ██████████████················    546t  46.3% (1)
+
+  Allocation by language
+  ────────────────────────────────────────────────────────────
