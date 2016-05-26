@@ -51,3 +51,19 @@ point of relevance is traceable to a concrete token match you can read yourself.
               slag     mass       relevance  credentials           └──────────┘
 ```
 
+1. **scan** — a deterministic, symlink-safe walk that rejects vendor
+   directories (`node_modules`, `target`, `vendor`, …), generated artefacts
+   (`*.min.js`, lockfiles, `*.pb.go`, …), binary files (by extension *and* by
+   sampling the head for NUL bytes and non-text ratio), and anything over the
+   size cap.
+2. **tokens** — a transparent token estimator. It counts word segments (long
+   identifiers fragment every ~4 chars, matching how BPE splits
+   `snake_case_names`), charges one segment per punctuation mark, and collapses
+   whitespace runs. It is a *heuristic*, deterministic and honest — it does not
+   pretend to be any specific vendor tokenizer.
+3. **score** — four additive signals, weighted to 100: **path** (25), **query
+   frequency** (35, with diminishing returns), **import graph** (20), and
+   **symbol definitions** (20). The breakdown is preserved so the manifest can
+   explain each grade.
+4. **secrets** — rule-based spark tests for AWS keys, PEM private keys, GitHub
+   and Slack tokens, JWTs, and a generic *high-entropy assignment to a secret-
