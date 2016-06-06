@@ -188,3 +188,18 @@ crucible: poured 1 file(s), 546 tokens / 600 budget (91.0% util) via dp;
 
 $ crucible compare --a examples/tight-manifest.json --b examples/demo-manifest.json
 crucible compare :: tight → demo
+  tokens : 546 → 1178 (+632)
+  value  : 83.2 → 125.2 (+42.0)
+  util   : 91.0% → 98.2%
+  added (2):
+    + README.md
+    + main.py
+  removed (0):
+  retained: 1 file(s)
+```
+
+Loosening the budget from 600 to 1200 tokens *adds* two files and captures 42
+more grade-points — and crucially **removes nothing** that still fit. That
+monotonicity is asserted in the integration tests.
+
+---
