@@ -218,3 +218,18 @@ Every grade is explained. Here is the entry for the winning file, verbatim:
   "language": "rust",
   "score_parts": {
     "path": 16.6667,
+    "query": 33.2500,
+    "import": 20.0000,
+    "symbol": 13.3333
+  },
+  "fill_rank": 0,
+  "explanation": "included at fill rank 0 — grade 83.2 (path 16.7/query 33.2/import 20.0/symbol 13.3) for 546 tokens"
+}
+```
+
+And the quarantined file — note the secret is **redacted**, never echoed:
+
+```json
+{
+  "path": "config/secrets.yaml",
+  "decision": "exclude:secret",
