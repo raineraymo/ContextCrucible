@@ -233,3 +233,18 @@ And the quarantined file — note the secret is **redacted**, never echoed:
 {
   "path": "config/secrets.yaml",
   "decision": "exclude:secret",
+  "secrets": [
+    { "rule": "aws-access-key-id", "line": 8, "confidence": 0.97, "redacted": "AKIA…[redacted:20 chars]" }
+  ],
+  "explanation": "quarantined — 1 secret finding(s), highest confidence 0.97"
+}
+```
+
+---
+
+## Command reference
+
+```text
+crucible compile   Pour a context pack from a repository
+crucible scan      Report kept / rejected files from a scan
+crucible compare   Weigh two manifests against each other
