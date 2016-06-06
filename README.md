@@ -173,3 +173,18 @@ $ node explorer/dist/cli.js examples/demo-manifest.json
   ! config/secrets.yaml                aws-access-key-id
 ```
 
+`src/budget_solver.rs` grades **83.3** — its path, body, imports, and symbol
+names all resonate with the query "budget solver knapsack", so it is poured
+first at fill rank 0.
+
+### 4. Weigh two pours against each other
+
+```text
+$ crucible compile --path fixtures/sample-repo --budget 600 \
+      --query "budget solver knapsack" --label tight \
+      --manifest examples/tight-manifest.json --out examples/tight-pack.txt
+crucible: poured 1 file(s), 546 tokens / 600 budget (91.0% util) via dp;
+          excluded secret=1 budget=3 low-score=0 scan=1
+
+$ crucible compare --a examples/tight-manifest.json --b examples/demo-manifest.json
+crucible compare :: tight → demo
