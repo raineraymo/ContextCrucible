@@ -203,3 +203,18 @@ more grade-points — and crucially **removes nothing** that still fit. That
 monotonicity is asserted in the integration tests.
 
 ---
+
+## A slice of the manifest
+
+Every grade is explained. Here is the entry for the winning file, verbatim:
+
+```json
+{
+  "path": "src/budget_solver.rs",
+  "decision": "include",
+  "tokens": 546,
+  "bytes": 1139,
+  "grade": 83.25,
+  "language": "rust",
+  "score_parts": {
+    "path": 16.6667,
