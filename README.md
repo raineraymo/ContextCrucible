@@ -158,3 +158,18 @@ $ node explorer/dist/cli.js examples/demo-manifest.json
 
   Allocation by language
   ────────────────────────────────────────────────────────────
+  rust           ██████████████················    546t  46.3% (1)
+  python         ████████······················    321t  27.2% (1)
+  text           ████████······················    311t  26.4% (1)
+
+  Included files (fill order)
+  ────────────────────────────────────────────────────────────
+  # 0 src/budget_solver.rs                  546t  grade  83.3
+  # 1 README.md                             311t  grade  30.3
+  # 2 main.py                               321t  grade  11.7
+
+  Quarantined (secrets)
+  ────────────────────────────────────────────────────────────
+  ! config/secrets.yaml                aws-access-key-id
+```
+
