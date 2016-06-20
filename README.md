@@ -264,3 +264,18 @@ crucible help      Show usage
 | `--out`        | *stdout*   | Where to write the pack content.             |
 | `--manifest`   | *(none)*   | Where to write the JSON manifest.            |
 
+With no query, `compile` grades on structural centrality (shallow, source-like
+files first) so the budget still fills sensibly.
+
+---
+
+## How the budget solver decides
+
+The pour is a classic 0/1 knapsack: maximise captured relevance subject to a
+hard token bound. `contextcrucible` solves it **exactly** with dynamic
+programming whenever the problem fits a bounded grid (items × quantised
+budget buckets ≤ 4M cells), and falls back to a deterministic value-density
+greedy only for very large repositories. Both paths:
+
+- break ties by `(−score, tokens, path)` so runs are reproducible;
+- drop any item that alone exceeds the budget;
