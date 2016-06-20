@@ -248,3 +248,19 @@ And the quarantined file — note the secret is **redacted**, never echoed:
 crucible compile   Pour a context pack from a repository
 crucible scan      Report kept / rejected files from a scan
 crucible compare   Weigh two manifests against each other
+crucible help      Show usage
+```
+
+### `compile` flags
+
+| Flag           | Default    | Meaning                                      |
+|----------------|------------|----------------------------------------------|
+| `--path`       | `.`        | Repository root to scan.                     |
+| `--budget`     | `8000`     | Hard token budget — never exceeded.          |
+| `--query`      | *(none)*   | Free-text relevance query.                   |
+| `--min-score`  | `0`        | Drop files graded below this floor.          |
+| `--max-bytes`  | `524288`   | Skip files larger than this.                 |
+| `--label`      | `pour`     | Label recorded in the manifest.              |
+| `--out`        | *stdout*   | Where to write the pack content.             |
+| `--manifest`   | *(none)*   | Where to write the JSON manifest.            |
+
