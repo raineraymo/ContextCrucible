@@ -18,3 +18,12 @@
 /// low-cost segment. The result is clamped to at least 1 for non-empty input.
 pub fn estimate(text: &str) -> u64 {
     if text.is_empty() {
+        return 0;
+    }
+    let mut tokens: u64 = 0;
+    let mut run_len: u32 = 0;
+    let mut in_space = false;
+
+    let flush_word = |run_len: u32, tokens: &mut u64| {
+        if run_len == 0 {
+            return;
