@@ -309,3 +309,18 @@ contextcrucible/
 ├── Makefile                 # build/test/demo/compare orchestration
 ├── src/
 │   ├── lib.rs               # pipeline types: Candidate, Decision
+│   ├── main.rs              # the `crucible` CLI (hand-rolled arg parsing)
+│   ├── scan.rs              # ore extraction / slag rejection
+│   ├── tokens.rs            # token assay
+│   ├── score.rs             # four-signal relevance grading
+│   ├── secrets.rs           # credential spark tests + redaction
+│   ├── budget.rs            # exact DP knapsack + greedy fallback
+│   ├── pack.rs              # pipeline orchestration + manifest rendering
+│   ├── compare.rs           # weigh two packs
+│   └── json.rs              # dependency-free JSON writer
+├── tests/pipeline.rs        # end-to-end tests over the fixture repo
+├── fixtures/sample-repo/    # a mixed repo: relevant code, secrets, generated
+├── examples/                # reproducible packs + manifests
+├── explorer/                # TypeScript static explorer (node:test suite)
+│   └── src/{explorer,cli,explorer.test}.ts
+├── docs/
