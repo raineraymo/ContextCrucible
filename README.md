@@ -324,3 +324,18 @@ contextcrucible/
 ├── explorer/                # TypeScript static explorer (node:test suite)
 │   └── src/{explorer,cli,explorer.test}.ts
 ├── docs/
+│   ├── PACK.md              # pack + manifest format spec
+│   └── assets/*.svg         # two animated, fully local diagrams
+├── LICENSE · CHANGELOG.md
+└── .github/workflows/ci.yml # Rust matrix + explorer + determinism smoke test
+```
+
+---
+
+## Testing
+
+```sh
+cargo test                       # 65 Rust unit + integration tests
+cd explorer && npm test          # 9 explorer tests via node:test
+```
+
