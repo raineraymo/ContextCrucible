@@ -279,3 +279,18 @@ greedy only for very large repositories. Both paths:
 
 - break ties by `(−score, tokens, path)` so runs are reproducible;
 - drop any item that alone exceeds the budget;
+- re-enforce the *true* token bound after reconstruction, trimming
+  lowest-value items if quantisation rounding nudged the pour over the line.
+
+The classic knapsack trap — greedily grabbing one big high-value item and
+missing a better pair — is covered by a unit test
+(`dp_beats_naive_greedy_on_classic_case`): with a budget of 100 the solver
+chooses two items summing to value 101 over a single item of value 100.
+
+---
+
+## The token assay, honestly
+
+Token counting here is a **heuristic**, and the code says so. It does not ship a
+vendor merge table and it does not claim to reproduce any specific tokenizer.
+What it gives you is *stable, explainable, monotone* estimates that are more
