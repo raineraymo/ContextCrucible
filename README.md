@@ -294,3 +294,18 @@ chooses two items summing to value 101 over a single item of value 100.
 Token counting here is a **heuristic**, and the code says so. It does not ship a
 vendor merge table and it does not claim to reproduce any specific tokenizer.
 What it gives you is *stable, explainable, monotone* estimates that are more
+than good enough to rank files and fill a budget — and identical on every run,
+every platform. If you need exact counts for a specific model, feed the emitted
+pack to that model's own tokenizer; the pack is plain text designed for exactly
+that hand-off.
+
+---
+
+## Project layout
+
+```
+contextcrucible/
+├── Cargo.toml               # crate manifest (bin: crucible, lib: contextcrucible)
+├── Makefile                 # build/test/demo/compare orchestration
+├── src/
+│   ├── lib.rs               # pipeline types: Candidate, Decision
