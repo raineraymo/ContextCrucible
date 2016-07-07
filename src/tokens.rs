@@ -27,3 +27,13 @@ pub fn estimate(text: &str) -> u64 {
     let flush_word = |run_len: u32, tokens: &mut u64| {
         if run_len == 0 {
             return;
+        }
+        // Roughly four characters per sub-token, minimum one.
+        *tokens += (run_len.div_ceil(4)).max(1) as u64;
+    };
+
+    for ch in text.chars() {
+        if ch.is_alphanumeric() {
+            if in_space {
+                in_space = false;
+            }
