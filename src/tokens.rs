@@ -46,3 +46,12 @@ pub fn estimate(text: &str) -> u64 {
                 tokens += 1;
                 in_space = true;
             }
+        } else {
+            // Punctuation / symbol: flush any pending word then count the symbol.
+            flush_word(run_len, &mut tokens);
+            run_len = 0;
+            in_space = false;
+            tokens += 1;
+        }
+    }
+    flush_word(run_len, &mut tokens);
