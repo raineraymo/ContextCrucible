@@ -37,3 +37,12 @@ pub fn estimate(text: &str) -> u64 {
             if in_space {
                 in_space = false;
             }
+            run_len += 1;
+        } else if ch.is_whitespace() {
+            flush_word(run_len, &mut tokens);
+            run_len = 0;
+            if !in_space {
+                // A whitespace run is cheap but not free.
+                tokens += 1;
+                in_space = true;
+            }
