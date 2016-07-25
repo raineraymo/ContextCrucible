@@ -64,3 +64,13 @@ pub fn estimate_all<'a, I: IntoIterator<Item = &'a str>>(chunks: I) -> u64 {
     chunks.into_iter().map(estimate).sum()
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn empty_is_zero() {
+        assert_eq!(estimate(""), 0);
+    }
+
+    #[test]
