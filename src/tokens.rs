@@ -74,3 +74,12 @@ mod tests {
     }
 
     #[test]
+    fn single_word_is_at_least_one() {
+        assert_eq!(estimate("fn"), 1);
+        assert_eq!(estimate("x"), 1);
+    }
+
+    #[test]
+    fn long_identifier_fragments() {
+        // 16 chars -> 4 sub-tokens.
+        assert_eq!(estimate("abcdefghijklmnop"), 4);
