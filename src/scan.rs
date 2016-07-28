@@ -31,3 +31,19 @@ pub const VENDOR_DIRS: &[&str] = &[
     "__pycache__",
     ".mypy_cache",
     ".pytest_cache",
+    ".gradle",
+    ".idea",
+    ".vscode",
+    "coverage",
+    ".next",
+    ".nuxt",
+];
+
+/// File extensions treated as binary outright (fast path before sampling).
+pub const BINARY_EXTS: &[&str] = &[
+    "png", "jpg", "jpeg", "gif", "bmp", "ico", "webp", "tiff", "pdf", "zip", "gz", "tar", "bz2",
+    "xz", "7z", "rar", "jar", "war", "class", "exe", "dll", "so", "dylib", "o", "a", "obj", "bin",
+    "wasm", "woff", "woff2", "ttf", "otf", "eot", "mp3", "mp4", "avi", "mov", "mkv", "flac", "wav",
+    "ogg", "sqlite", "db", "pyc", "pyo", "lock",
+];
+
