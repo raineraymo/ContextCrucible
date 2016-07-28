@@ -83,3 +83,12 @@ mod tests {
     fn long_identifier_fragments() {
         // 16 chars -> 4 sub-tokens.
         assert_eq!(estimate("abcdefghijklmnop"), 4);
+    }
+
+    #[test]
+    fn punctuation_counts_individually() {
+        // "a" (1) + "(" (1) + ")" (1) = 3
+        assert_eq!(estimate("a()"), 3);
+    }
+
+    #[test]
