@@ -47,3 +47,20 @@ pub const BINARY_EXTS: &[&str] = &[
     "ogg", "sqlite", "db", "pyc", "pyo", "lock",
 ];
 
+/// File names or suffixes that mark generated artefacts.
+pub const GENERATED_SUFFIXES: &[&str] = &[
+    ".min.js",
+    ".min.css",
+    ".map",
+    ".generated.ts",
+    ".g.dart",
+    ".pb.go",
+    "_pb2.py",
+];
+
+/// Exact generated file names.
+pub const GENERATED_NAMES: &[&str] = &[
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "Cargo.lock",
