@@ -64,3 +64,19 @@ pub const GENERATED_NAMES: &[&str] = &[
     "yarn.lock",
     "pnpm-lock.yaml",
     "Cargo.lock",
+    "poetry.lock",
+    "composer.lock",
+    "Gemfile.lock",
+];
+
+/// Tunable scan limits.
+#[derive(Debug, Clone)]
+pub struct ScanConfig {
+    /// Reject files strictly larger than this many bytes.
+    pub max_bytes: u64,
+    /// Number of leading bytes sampled for binary detection.
+    pub sample_bytes: usize,
+    /// If the fraction of non-text bytes in the sample exceeds this, treat as
+    /// binary. Range `0.0..=1.0`.
+    pub binary_ratio: f64,
+}
