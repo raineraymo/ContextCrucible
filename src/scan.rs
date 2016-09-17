@@ -80,3 +80,19 @@ pub struct ScanConfig {
     /// binary. Range `0.0..=1.0`.
     pub binary_ratio: f64,
 }
+
+impl Default for ScanConfig {
+    fn default() -> Self {
+        ScanConfig {
+            max_bytes: 512 * 1024,
+            sample_bytes: 8192,
+            binary_ratio: 0.30,
+        }
+    }
+}
+
+/// A file that survived the scan, ready for assay.
+#[derive(Debug, Clone)]
+pub struct ScannedFile {
+    pub rel_path: String,
+    pub bytes: u64,
