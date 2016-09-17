@@ -96,3 +96,19 @@ impl Default for ScanConfig {
 pub struct ScannedFile {
     pub rel_path: String,
     pub bytes: u64,
+    pub content: String,
+}
+
+/// A file rejected during scanning, retained for the manifest's audit trail.
+#[derive(Debug, Clone)]
+pub struct RejectedFile {
+    pub rel_path: String,
+    pub bytes: u64,
+    pub reason: String,
+}
+
+/// Combined scan result.
+#[derive(Debug, Default)]
+pub struct ScanResult {
+    pub kept: Vec<ScannedFile>,
+    pub rejected: Vec<RejectedFile>,
