@@ -112,3 +112,20 @@ pub struct RejectedFile {
 pub struct ScanResult {
     pub kept: Vec<ScannedFile>,
     pub rejected: Vec<RejectedFile>,
+}
+
+/// Walk `root` and classify every regular file. Deterministic ordering.
+pub fn scan(root: &Path, cfg: &ScanConfig) -> io::Result<ScanResult> {
+    let mut result = ScanResult::default();
+    let mut stack: Vec<PathBuf> = vec![root.to_path_buf()];
+
+    while let Some(dir) = stack.pop() {
+        let mut entries: Vec<PathBuf> = match fs::read_dir(&dir) {
+            Ok(rd) => rd.filter_map(|e| e.ok().map(|e| e.path())).collect(),
+            Err(_) => continue,
+        };
+        // Sort for deterministic traversal (directories and files interleaved
+        // by path string; we push dirs onto the stack so we reverse-sort to
+        // keep overall lexicographic emission order stable).
+        entries.sort();
+        // Process files first (in order), collect dirs to recurse afterwards.
