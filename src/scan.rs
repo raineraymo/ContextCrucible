@@ -129,3 +129,19 @@ pub fn scan(root: &Path, cfg: &ScanConfig) -> io::Result<ScanResult> {
         // keep overall lexicographic emission order stable).
         entries.sort();
         // Process files first (in order), collect dirs to recurse afterwards.
+        let mut subdirs: Vec<PathBuf> = Vec::new();
+        for path in entries {
+            let file_type = match fs::symlink_metadata(&path) {
+                Ok(m) => m.file_type(),
+                Err(_) => continue,
+            };
+            if file_type.is_symlink() {
+                // Never follow symlinks: avoids cycles and escaping the root.
+                continue;
+            }
+            if file_type.is_dir() {
+                let name = file_name_of(&path);
+                if VENDOR_DIRS.contains(&name.as_str()) {
+                    continue;
+                }
+                subdirs.push(path);
