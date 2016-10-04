@@ -145,3 +145,19 @@ pub fn scan(root: &Path, cfg: &ScanConfig) -> io::Result<ScanResult> {
                     continue;
                 }
                 subdirs.push(path);
+                continue;
+            }
+            if !file_type.is_file() {
+                continue;
+            }
+            classify_file(root, &path, cfg, &mut result)?;
+        }
+        // Push subdirs in reverse so the smallest path is popped first.
+        subdirs.sort();
+        for d in subdirs.into_iter().rev() {
+            stack.push(d);
+        }
+    }
+
+    result.kept.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
+    result.rejected.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
