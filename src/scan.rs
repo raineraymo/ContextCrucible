@@ -161,3 +161,19 @@ pub fn scan(root: &Path, cfg: &ScanConfig) -> io::Result<ScanResult> {
 
     result.kept.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
     result.rejected.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
+    Ok(result)
+}
+
+fn classify_file(
+    root: &Path,
+    path: &Path,
+    cfg: &ScanConfig,
+    result: &mut ScanResult,
+) -> io::Result<()> {
+    let rel = rel_path(root, path);
+    let bytes = fs::metadata(path).map(|m| m.len()).unwrap_or(0);
+    let name = file_name_of(path);
+    let lower = name.to_ascii_lowercase();
+
+    if GENERATED_NAMES
+        .iter()
