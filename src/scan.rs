@@ -177,3 +177,20 @@ fn classify_file(
 
     if GENERATED_NAMES
         .iter()
+        .any(|g| g.eq_ignore_ascii_case(&name))
+    {
+        result.rejected.push(RejectedFile {
+            rel_path: rel,
+            bytes,
+            reason: "generated:name".into(),
+        });
+        return Ok(());
+    }
+    if GENERATED_SUFFIXES.iter().any(|s| lower.ends_with(s)) {
+        result.rejected.push(RejectedFile {
+            rel_path: rel,
+            bytes,
+            reason: "generated:suffix".into(),
+        });
+        return Ok(());
+    }
