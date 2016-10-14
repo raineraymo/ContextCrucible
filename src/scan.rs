@@ -194,3 +194,19 @@ fn classify_file(
         });
         return Ok(());
     }
+    if let Some(ext) = extension_of(&lower) {
+        if BINARY_EXTS.contains(&ext.as_str()) {
+            result.rejected.push(RejectedFile {
+                rel_path: rel,
+                bytes,
+                reason: "binary:extension".into(),
+            });
+            return Ok(());
+        }
+    }
+    if bytes > cfg.max_bytes {
+        result.rejected.push(RejectedFile {
+            rel_path: rel,
+            bytes,
+            reason: format!("too-large:{}b", bytes),
+        });
