@@ -210,3 +210,19 @@ fn classify_file(
             bytes,
             reason: format!("too-large:{}b", bytes),
         });
+        return Ok(());
+    }
+
+    // Sample the head for binary detection before committing to a full read.
+    let sample = read_sample(path, cfg.sample_bytes)?;
+    if is_binary_sample(&sample, cfg.binary_ratio) {
+        result.rejected.push(RejectedFile {
+            rel_path: rel,
+            bytes,
+            reason: "binary:content".into(),
+        });
+        return Ok(());
+    }
+
+    match fs::read(path) {
+        Ok(raw) => match String::from_utf8(raw) {
