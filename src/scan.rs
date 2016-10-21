@@ -243,3 +243,19 @@ fn classify_file(
             reason: format!("io:{}", e.kind()),
         }),
     }
+    Ok(())
+}
+
+fn read_sample(path: &Path, n: usize) -> io::Result<Vec<u8>> {
+    let mut f = fs::File::open(path)?;
+    let mut buf = vec![0u8; n];
+    let read = f.read(&mut buf)?;
+    buf.truncate(read);
+    Ok(buf)
+}
+
+/// Heuristic binary detection: any NUL byte, or a high fraction of bytes that
+/// are neither printable ASCII, common whitespace, nor valid UTF-8 lead bytes.
+pub fn is_binary_sample(sample: &[u8], ratio: f64) -> bool {
+    if sample.is_empty() {
+        return false;
