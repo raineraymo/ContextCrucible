@@ -226,3 +226,20 @@ fn classify_file(
 
     match fs::read(path) {
         Ok(raw) => match String::from_utf8(raw) {
+            Ok(content) => result.kept.push(ScannedFile {
+                rel_path: rel,
+                bytes,
+                content,
+            }),
+            Err(_) => result.rejected.push(RejectedFile {
+                rel_path: rel,
+                bytes,
+                reason: "binary:non-utf8".into(),
+            }),
+        },
+        Err(e) => result.rejected.push(RejectedFile {
+            rel_path: rel,
+            bytes,
+            reason: format!("io:{}", e.kind()),
+        }),
+    }
