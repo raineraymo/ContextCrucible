@@ -259,3 +259,19 @@ fn read_sample(path: &Path, n: usize) -> io::Result<Vec<u8>> {
 pub fn is_binary_sample(sample: &[u8], ratio: f64) -> bool {
     if sample.is_empty() {
         return false;
+    }
+    if sample.contains(&0) {
+        return true;
+    }
+    let mut suspicious = 0usize;
+    for &b in sample {
+        let ok = b == b'\n' || b == b'\r' || b == b'\t' || (0x20..=0x7e).contains(&b) || b >= 0x80; // allow UTF-8 continuation/lead bytes
+        if !ok {
+            suspicious += 1;
+        }
+    }
+    (suspicious as f64) / (sample.len() as f64) > ratio
+}
+
+/// Convert an absolute path under `root` into a forward-slash relative path.
+pub fn rel_path(root: &Path, path: &Path) -> String {
