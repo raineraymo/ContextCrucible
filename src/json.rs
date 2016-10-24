@@ -23,3 +23,13 @@ pub enum Json {
 
 impl Json {
     /// Convenience constructor for a string value.
+    pub fn s<T: Into<String>>(v: T) -> Json {
+        Json::Str(v.into())
+    }
+
+    /// Render to a pretty-printed string with two-space indentation.
+    pub fn to_pretty(&self) -> String {
+        let mut out = String::new();
+        self.write_pretty(&mut out, 0);
+        out.push('\n');
+        out
