@@ -44,3 +44,13 @@ impl Json {
             }
             Json::Float(f) => {
                 if f.is_finite() {
+                    // Fixed precision keeps output byte-stable across platforms.
+                    let _ = write!(out, "{:.4}", f);
+                } else {
+                    out.push_str("null");
+                }
+            }
+            Json::Str(s) => write_escaped(out, s),
+            Json::Array(items) => {
+                if items.is_empty() {
+                    out.push_str("[]");
