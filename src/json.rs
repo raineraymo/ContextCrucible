@@ -33,3 +33,14 @@ impl Json {
         self.write_pretty(&mut out, 0);
         out.push('\n');
         out
+    }
+
+    fn write_pretty(&self, out: &mut String, indent: usize) {
+        match self {
+            Json::Null => out.push_str("null"),
+            Json::Bool(b) => out.push_str(if *b { "true" } else { "false" }),
+            Json::Int(n) => {
+                let _ = write!(out, "{}", n);
+            }
+            Json::Float(f) => {
+                if f.is_finite() {
