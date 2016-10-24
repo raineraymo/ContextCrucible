@@ -13,3 +13,13 @@ pub enum Json {
     Bool(bool),
     /// Integer number (rendered without a decimal point).
     Int(i64),
+    /// Floating number (rendered with fixed precision for stability).
+    Float(f64),
+    Str(String),
+    Array(Vec<Json>),
+    /// Object preserving insertion order.
+    Object(Vec<(String, Json)>),
+}
+
+impl Json {
+    /// Convenience constructor for a string value.
