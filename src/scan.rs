@@ -275,3 +275,19 @@ pub fn is_binary_sample(sample: &[u8], ratio: f64) -> bool {
 
 /// Convert an absolute path under `root` into a forward-slash relative path.
 pub fn rel_path(root: &Path, path: &Path) -> String {
+    let rel = path.strip_prefix(root).unwrap_or(path);
+    let mut s = String::new();
+    for (i, comp) in rel.components().enumerate() {
+        if i > 0 {
+            s.push('/');
+        }
+        s.push_str(&comp.as_os_str().to_string_lossy());
+    }
+    s
+}
+
+fn file_name_of(path: &Path) -> String {
+    path.file_name()
+        .map(|n| n.to_string_lossy().into_owned())
+        .unwrap_or_default()
+}
