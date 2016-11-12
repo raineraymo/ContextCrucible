@@ -64,3 +64,14 @@ impl Json {
                         out.push(',');
                     }
                     out.push('\n');
+                }
+                push_indent(out, indent);
+                out.push(']');
+            }
+            Json::Object(entries) => {
+                if entries.is_empty() {
+                    out.push_str("{}");
+                    return;
+                }
+                out.push_str("{\n");
+                for (i, (k, v)) in entries.iter().enumerate() {
