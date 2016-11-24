@@ -85,3 +85,13 @@ impl Json {
                     out.push('\n');
                 }
                 push_indent(out, indent);
+                out.push('}');
+            }
+        }
+    }
+}
+
+fn push_indent(out: &mut String, indent: usize) {
+    for _ in 0..indent {
+        out.push_str("  ");
+    }
