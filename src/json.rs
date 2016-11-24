@@ -95,3 +95,13 @@ fn push_indent(out: &mut String, indent: usize) {
     for _ in 0..indent {
         out.push_str("  ");
     }
+}
+
+fn write_escaped(out: &mut String, s: &str) {
+    out.push('"');
+    for ch in s.chars() {
+        match ch {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
