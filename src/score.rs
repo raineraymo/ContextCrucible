@@ -59,3 +59,18 @@ pub fn grade(rel_path: &str, content: &str, terms: &[String], import_hit: bool) 
         return ScoreParts {
             path: baseline,
             query: 0.0,
+            import: 0.0,
+            symbol: 0.0,
+        };
+    }
+
+    let path_lower = rel_path.to_ascii_lowercase();
+    let body_lower = content.to_ascii_lowercase();
+
+    // --- path signal ---
+    let path_hits = terms
+        .iter()
+        .filter(|t| path_lower.contains(t.as_str()))
+        .count();
+    let path = if terms.is_empty() {
+        0.0
