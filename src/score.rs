@@ -30,3 +30,18 @@ impl ScoreParts {
 /// Signal weights (must sum to 100).
 const W_PATH: f64 = 25.0;
 const W_QUERY: f64 = 35.0;
+const W_IMPORT: f64 = 20.0;
+const W_SYMBOL: f64 = 20.0;
+
+/// Normalise a free-text query into lowercase alphanumeric terms (length >= 2).
+pub fn parse_query(query: &str) -> Vec<String> {
+    let mut terms: Vec<String> = query
+        .split(|c: char| !c.is_alphanumeric())
+        .filter(|t| t.len() >= 2)
+        .map(|t| t.to_ascii_lowercase())
+        .collect();
+    terms.sort();
+    terms.dedup();
+    terms
+}
+
