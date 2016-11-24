@@ -1,0 +1,32 @@
+//! Ore grading: score each file's relevance to the task at hand.
+//!
+//! Four transparent signals are combined into a 0–100 grade. None of them use
+//! learned embeddings — every point is traceable to a concrete token match, so
+//! the manifest can explain exactly *why* a file scored the way it did.
+//!
+//! | Signal   | Weight | What it rewards                                        |
+//! |----------|--------|--------------------------------------------------------|
+//! | path     | 25     | query terms appearing in the file path                 |
+//! | query    | 35     | query terms appearing in the file body (freq-capped)   |
+//! | import   | 20     | files that import / are imported by query-named modules|
+//! | symbol   | 20     | definitions (fn/class/struct/def) matching query terms |
+
+/// Per-signal contribution, retained for the manifest.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct ScoreParts {
+    pub path: f64,
+    pub query: f64,
+    pub import: f64,
+    pub symbol: f64,
+}
+
+impl ScoreParts {
+    /// Total grade, clamped to `0.0..=100.0`.
+    pub fn total(&self) -> f64 {
+        (self.path + self.query + self.import + self.symbol).clamp(0.0, 100.0)
+    }
+}
+
+/// Signal weights (must sum to 100).
+const W_PATH: f64 = 25.0;
+const W_QUERY: f64 = 35.0;
