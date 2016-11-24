@@ -45,3 +45,17 @@ pub fn parse_query(query: &str) -> Vec<String> {
     terms
 }
 
+/// Grade a single file.
+///
+/// * `rel_path` — repo-relative path.
+/// * `content`  — file body.
+/// * `terms`    — normalised query terms from [`parse_query`].
+/// * `import_hit` — whether import analysis linked this file to the query.
+pub fn grade(rel_path: &str, content: &str, terms: &[String], import_hit: bool) -> ScoreParts {
+    if terms.is_empty() {
+        // With no query, grade purely on structural centrality: shallow,
+        // source-like files score a flat baseline so the budget still fills.
+        let baseline = baseline_score(rel_path);
+        return ScoreParts {
+            path: baseline,
+            query: 0.0,
