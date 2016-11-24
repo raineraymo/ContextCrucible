@@ -116,3 +116,13 @@ fn write_escaped(out: &mut String, s: &str) {
 }
 
 #[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn renders_object_in_order() {
+        let j = Json::Object(vec![("b".into(), Json::Int(1)), ("a".into(), Json::Int(2))]);
+        let s = j.to_pretty();
+        let b_pos = s.find("\"b\"").unwrap();
+        let a_pos = s.find("\"a\"").unwrap();
+        assert!(b_pos < a_pos, "insertion order must be preserved");
