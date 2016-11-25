@@ -104,3 +104,17 @@ pub fn grade(rel_path: &str, content: &str, terms: &[String], import_hit: bool) 
         .count();
     let symbol = if terms.is_empty() {
         0.0
+    } else {
+        W_SYMBOL * (symbol_hits as f64 / terms.len() as f64)
+    };
+
+    ScoreParts {
+        path,
+        query,
+        import,
+        symbol,
+    }
+}
+
+/// Baseline structural score used when no query is supplied: rewards shallow
+/// paths and recognised source extensions.
