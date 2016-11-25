@@ -89,3 +89,18 @@ pub fn grade(rel_path: &str, content: &str, terms: &[String], import_hit: bool) 
             2 => 0.85,
             _ => 1.0,
         };
+        query_frac += term_score;
+    }
+    let query = W_QUERY * (query_frac / terms.len() as f64);
+
+    // --- import signal ---
+    let import = if import_hit { W_IMPORT } else { 0.0 };
+
+    // --- symbol signal ---
+    let symbols = extract_symbols(content);
+    let symbol_hits = terms
+        .iter()
+        .filter(|t| symbols.iter().any(|s| s.contains(t.as_str())))
+        .count();
+    let symbol = if terms.is_empty() {
+        0.0
