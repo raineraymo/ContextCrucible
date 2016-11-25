@@ -74,3 +74,18 @@ pub fn grade(rel_path: &str, content: &str, terms: &[String], import_hit: bool) 
         .count();
     let path = if terms.is_empty() {
         0.0
+    } else {
+        W_PATH * (path_hits as f64 / terms.len() as f64)
+    };
+
+    // --- query signal (frequency, capped so long files can't dominate) ---
+    let mut query_frac = 0.0;
+    for t in terms {
+        let occurrences = count_occurrences(&body_lower, t);
+        // Diminishing returns: 0 -> 0, 1 -> 0.6, >=3 -> 1.0
+        let term_score = match occurrences {
+            0 => 0.0,
+            1 => 0.6,
+            2 => 0.85,
+            _ => 1.0,
+        };
