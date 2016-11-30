@@ -118,3 +118,18 @@ pub fn grade(rel_path: &str, content: &str, terms: &[String], import_hit: bool) 
 
 /// Baseline structural score used when no query is supplied: rewards shallow
 /// paths and recognised source extensions.
+fn baseline_score(rel_path: &str) -> f64 {
+    let depth = rel_path.matches('/').count();
+    let depth_score = W_PATH * (1.0 / (1.0 + depth as f64));
+    let ext_bonus = if is_source_like(rel_path) { 6.0 } else { 0.0 };
+    (depth_score + ext_bonus).min(W_PATH)
+}
+
+fn is_source_like(rel_path: &str) -> bool {
+    const EXTS: &[&str] = &[
+        ".rs", ".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".java", ".rb", ".c", ".h", ".cpp",
+        ".hpp", ".cs", ".swift", ".kt", ".php",
+    ];
+    let lower = rel_path.to_ascii_lowercase();
+    EXTS.iter().any(|e| lower.ends_with(e))
+}
