@@ -133,3 +133,18 @@ fn is_source_like(rel_path: &str) -> bool {
     let lower = rel_path.to_ascii_lowercase();
     EXTS.iter().any(|e| lower.ends_with(e))
 }
+
+fn count_occurrences(haystack: &str, needle: &str) -> usize {
+    if needle.is_empty() {
+        return 0;
+    }
+    let mut count = 0;
+    let mut start = 0;
+    while let Some(pos) = haystack[start..].find(needle) {
+        count += 1;
+        start += pos + needle.len();
+    }
+    count
+}
+
+/// Extract lowercase definition names from common languages via lightweight
