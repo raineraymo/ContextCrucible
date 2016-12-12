@@ -148,3 +148,18 @@ fn count_occurrences(haystack: &str, needle: &str) -> usize {
 }
 
 /// Extract lowercase definition names from common languages via lightweight
+/// keyword scanning. This is not a full parser — it recognises the leading
+/// token after `fn`/`def`/`class`/`struct`/`function`/`interface`/`type`.
+pub fn extract_symbols(content: &str) -> Vec<String> {
+    const KEYWORDS: &[&str] = &[
+        "fn",
+        "def",
+        "class",
+        "struct",
+        "function",
+        "interface",
+        "type",
+        "enum",
+        "trait",
+        "impl",
+        "const",
