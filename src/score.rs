@@ -163,3 +163,18 @@ pub fn extract_symbols(content: &str) -> Vec<String> {
         "trait",
         "impl",
         "const",
+        "let",
+        "var",
+    ];
+    let mut names = Vec::new();
+    for line in content.lines() {
+        let mut words = line.split_whitespace();
+        while let Some(w) = words.next() {
+            let clean = w.trim_start_matches(['(', '{']);
+            if KEYWORDS.contains(&clean) {
+                if let Some(name) = words.next() {
+                    let ident: String = name
+                        .chars()
+                        .take_while(|c| c.is_alphanumeric() || *c == '_')
+                        .collect::<String>()
+                        .to_ascii_lowercase();
