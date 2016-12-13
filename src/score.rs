@@ -207,3 +207,18 @@ pub fn extract_imports(content: &str) -> Vec<String> {
             Some(&t[idx + 8..])
         } else if lower.starts_with("#include") {
             Some(&t[8..])
+        } else {
+            None
+        };
+        if let Some(p) = payload {
+            for frag in
+                p.split(|c: char| !(c.is_alphanumeric() || c == '_' || c == '.' || c == '/'))
+            {
+                let last = frag.rsplit(['.', '/']).next().unwrap_or(frag);
+                if last.len() >= 2 && last.chars().next().is_some_and(|c| c.is_alphabetic()) {
+                    mods.push(last.to_ascii_lowercase());
+                }
+            }
+        }
+    }
+    mods.sort();
