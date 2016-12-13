@@ -237,3 +237,17 @@ pub fn import_relevance(rel_path: &str, content: &str, terms: &[String]) -> bool
     if terms.iter().any(|t| stem.contains(t.as_str())) {
         return true;
     }
+    let imports = extract_imports(content);
+    imports
+        .iter()
+        .any(|m| terms.iter().any(|t| m.contains(t.as_str())))
+}
+
+fn module_stem(rel_path: &str) -> String {
+    let file = rel_path.rsplit('/').next().unwrap_or(rel_path);
+    let stem = file.split('.').next().unwrap_or(file);
+    stem.to_ascii_lowercase()
+}
+
+#[cfg(test)]
+mod tests {
