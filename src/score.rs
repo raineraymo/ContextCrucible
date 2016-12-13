@@ -251,3 +251,18 @@ fn module_stem(rel_path: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
+    #[test]
+    fn query_parses_and_dedups() {
+        let q = parse_query("Budget budget SOLVER a");
+        assert_eq!(q, vec!["budget".to_string(), "solver".to_string()]);
+    }
+
+    #[test]
+    fn path_signal_rewards_matches() {
+        let terms = parse_query("budget");
+        let s = grade("src/budget.rs", "fn nothing() {}", &terms, false);
+        assert!(s.path > 0.0);
+    }
+
