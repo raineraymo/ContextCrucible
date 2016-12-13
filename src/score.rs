@@ -178,3 +178,17 @@ pub fn extract_symbols(content: &str) -> Vec<String> {
                         .take_while(|c| c.is_alphanumeric() || *c == '_')
                         .collect::<String>()
                         .to_ascii_lowercase();
+                    if !ident.is_empty() {
+                        names.push(ident);
+                    }
+                }
+            }
+        }
+    }
+    names.sort();
+    names.dedup();
+    names
+}
+
+/// Extract module-ish names referenced by import/use/require/include lines.
+/// Used to build the import adjacency for the import signal.
