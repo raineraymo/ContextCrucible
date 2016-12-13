@@ -222,3 +222,18 @@ pub fn extract_imports(content: &str) -> Vec<String> {
         }
     }
     mods.sort();
+    mods.dedup();
+    mods
+}
+
+/// Determine whether a file participates in the import graph relevant to the
+/// query: either it imports a query-named module, or its own module stem
+/// matches a query term (so importers of it are relevant too).
+pub fn import_relevance(rel_path: &str, content: &str, terms: &[String]) -> bool {
+    if terms.is_empty() {
+        return false;
+    }
+    let stem = module_stem(rel_path);
+    if terms.iter().any(|t| stem.contains(t.as_str())) {
+        return true;
+    }
