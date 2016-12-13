@@ -192,3 +192,18 @@ pub fn extract_symbols(content: &str) -> Vec<String> {
 
 /// Extract module-ish names referenced by import/use/require/include lines.
 /// Used to build the import adjacency for the import signal.
+pub fn extract_imports(content: &str) -> Vec<String> {
+    let mut mods = Vec::new();
+    for line in content.lines() {
+        let t = line.trim();
+        let lower = t.to_ascii_lowercase();
+        let payload = if lower.starts_with("use ") {
+            Some(&t[4..])
+        } else if lower.starts_with("import ") {
+            Some(&t[7..])
+        } else if lower.starts_with("from ") {
+            Some(&t[5..])
+        } else if let Some(idx) = t.find("require(") {
+            Some(&t[idx + 8..])
+        } else if lower.starts_with("#include") {
+            Some(&t[8..])
