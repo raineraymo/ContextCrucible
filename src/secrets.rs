@@ -60,3 +60,19 @@ fn detect_line(line: &str, line_no: usize, out: &mut Vec<Finding>) {
             confidence: 0.97,
             redacted: redact(&m),
         });
+        return;
+    }
+
+    // 3. GitHub personal access token: ghp_ / gho_ / ghs_ + 36 alnum.
+    if let Some(m) = find_prefixed(trimmed, &["ghp_", "gho_", "ghs_", "ghu_", "ghr_"], 36) {
+        out.push(Finding {
+            rule: "github-token".into(),
+            line: line_no,
+            confidence: 0.95,
+            redacted: redact(&m),
+        });
+        return;
+    }
+
+    // 4. Slack token: xox[baprs]-...
+    if let Some(m) = find_slack(trimmed) {
