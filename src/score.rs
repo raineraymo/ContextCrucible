@@ -266,3 +266,18 @@ mod tests {
         assert!(s.path > 0.0);
     }
 
+    #[test]
+    fn query_signal_diminishes() {
+        let terms = parse_query("token");
+        let few = grade("a.rs", "token", &terms, false).query;
+        let many = grade("a.rs", "token token token token", &terms, false).query;
+        assert!(many > few);
+        assert!(many <= 35.0);
+    }
+
+    #[test]
+    fn symbol_signal_detects_definitions() {
+        let terms = parse_query("smelt");
+        let s = grade("a.rs", "fn smelt_ore() {}", &terms, false);
+        assert!(s.symbol > 0.0);
+    }
