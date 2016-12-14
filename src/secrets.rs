@@ -30,3 +30,18 @@ pub fn scan(content: &str) -> Vec<Finding> {
     for (idx, line) in content.lines().enumerate() {
         let line_no = idx + 1;
         detect_line(line, line_no, &mut findings);
+    }
+    findings.sort_by(|a, b| a.line.cmp(&b.line).then(a.rule.cmp(&b.rule)));
+    findings
+}
+
+fn detect_line(line: &str, line_no: usize, out: &mut Vec<Finding>) {
+    let trimmed = line.trim();
+    if trimmed.is_empty() || trimmed.starts_with("//") && !trimmed.contains('=') {
+        // Skip obvious pure comments without assignments; keep commented secrets.
+    }
+
+    // 1. Private key PEM headers.
+    if trimmed.contains("-----BEGIN") && trimmed.contains("PRIVATE KEY-----") {
+        out.push(Finding {
+            rule: "private-key-pem".into(),
