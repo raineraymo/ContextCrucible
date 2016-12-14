@@ -45,3 +45,18 @@ fn detect_line(line: &str, line_no: usize, out: &mut Vec<Finding>) {
     if trimmed.contains("-----BEGIN") && trimmed.contains("PRIVATE KEY-----") {
         out.push(Finding {
             rule: "private-key-pem".into(),
+            line: line_no,
+            confidence: 0.99,
+            redacted: "-----BEGIN … PRIVATE KEY-----".into(),
+        });
+        return;
+    }
+
+    // 2. AWS access key id: AKIA/ASIA + 16 uppercase alnum.
+    if let Some(m) = find_aws_key(trimmed) {
+        out.push(Finding {
+            rule: "aws-access-key-id".into(),
+            line: line_no,
+            confidence: 0.97,
+            redacted: redact(&m),
+        });
