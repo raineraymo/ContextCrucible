@@ -91,3 +91,19 @@ fn detect_line(line: &str, line_no: usize, out: &mut Vec<Finding>) {
             rule: "jwt".into(),
             line: line_no,
             confidence: 0.85,
+            redacted: redact(&m),
+        });
+        return;
+    }
+
+    // 6. Generic secret assignment heuristic.
+    if let Some((name, value)) = split_assignment(trimmed) {
+        if looks_secret_name(&name) && high_entropy_value(&value) {
+            out.push(Finding {
+                rule: "generic-secret-assignment".into(),
+                line: line_no,
+                confidence: 0.80,
+                redacted: format!("{} = {}", name.trim(), redact(&value)),
+            });
+        }
+    }
