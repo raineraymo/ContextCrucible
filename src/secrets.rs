@@ -76,3 +76,18 @@ fn detect_line(line: &str, line_no: usize, out: &mut Vec<Finding>) {
 
     // 4. Slack token: xox[baprs]-...
     if let Some(m) = find_slack(trimmed) {
+        out.push(Finding {
+            rule: "slack-token".into(),
+            line: line_no,
+            confidence: 0.93,
+            redacted: redact(&m),
+        });
+        return;
+    }
+
+    // 5. JWT: three base64url segments separated by dots, first starts eyJ.
+    if let Some(m) = find_jwt(trimmed) {
+        out.push(Finding {
+            rule: "jwt".into(),
+            line: line_no,
+            confidence: 0.85,
