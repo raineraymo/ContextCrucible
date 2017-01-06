@@ -107,3 +107,18 @@ fn detect_line(line: &str, line_no: usize, out: &mut Vec<Finding>) {
             });
         }
     }
+}
+
+fn find_aws_key(s: &str) -> Option<String> {
+    for prefix in ["AKIA", "ASIA"] {
+        if let Some(pos) = s.find(prefix) {
+            let rest: String = s[pos..]
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric())
+                .collect();
+            if rest.len() == 20
+                && rest[4..]
+                    .chars()
+                    .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
+            {
+                return Some(rest);
