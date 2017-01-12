@@ -138,3 +138,18 @@ fn find_prefixed(s: &str, prefixes: &[&str], token_len: usize) -> Option<String>
             if tail.len() >= token_len {
                 return Some(format!("{}{}", p, tail));
             }
+        }
+    }
+    None
+}
+
+fn find_slack(s: &str) -> Option<String> {
+    for p in ["xoxb-", "xoxa-", "xoxp-", "xoxr-", "xoxs-"] {
+        if let Some(pos) = s.find(p) {
+            let tail: String = s[pos..]
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == '-')
+                .collect();
+            if tail.len() >= 20 {
+                return Some(tail);
+            }
