@@ -122,3 +122,19 @@ fn find_aws_key(s: &str) -> Option<String> {
                     .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
             {
                 return Some(rest);
+            }
+        }
+    }
+    None
+}
+
+fn find_prefixed(s: &str, prefixes: &[&str], token_len: usize) -> Option<String> {
+    for p in prefixes {
+        if let Some(pos) = s.find(p) {
+            let tail: String = s[pos + p.len()..]
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                .collect();
+            if tail.len() >= token_len {
+                return Some(format!("{}{}", p, tail));
+            }
