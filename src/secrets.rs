@@ -153,3 +153,18 @@ fn find_slack(s: &str) -> Option<String> {
             if tail.len() >= 20 {
                 return Some(tail);
             }
+        }
+    }
+    None
+}
+
+fn find_jwt(s: &str) -> Option<String> {
+    for token in s.split(|c: char| c.is_whitespace() || c == '"' || c == '\'' || c == '=') {
+        if token.starts_with("eyJ") {
+            let parts: Vec<&str> = token.split('.').collect();
+            if parts.len() == 3
+                && parts
+                    .iter()
+                    .all(|p| !p.is_empty() && p.chars().all(is_b64url))
+                && token.len() >= 40
+            {
