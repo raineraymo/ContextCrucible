@@ -168,3 +168,19 @@ fn find_jwt(s: &str) -> Option<String> {
                     .all(|p| !p.is_empty() && p.chars().all(is_b64url))
                 && token.len() >= 40
             {
+                return Some(token.to_string());
+            }
+        }
+    }
+    None
+}
+
+fn is_b64url(c: char) -> bool {
+    c.is_ascii_alphanumeric() || c == '-' || c == '_'
+}
+
+/// Split `name = value` / `name: value` assignments (JSON, YAML, env, code).
+fn split_assignment(s: &str) -> Option<(String, String)> {
+    let sep = s.find('=').or_else(|| s.find(':'))?;
+    let name = s[..sep]
+        .trim()
