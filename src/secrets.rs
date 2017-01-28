@@ -199,3 +199,19 @@ fn split_assignment(s: &str) -> Option<(String, String)> {
 
 fn looks_secret_name(name: &str) -> bool {
     let lower = name.to_ascii_lowercase();
+    const NEEDLES: &[&str] = &[
+        "secret",
+        "password",
+        "passwd",
+        "token",
+        "api_key",
+        "apikey",
+        "api-key",
+        "access_key",
+        "private_key",
+        "client_secret",
+        "auth",
+        "credential",
+    ];
+    NEEDLES.iter().any(|n| lower.contains(n))
+}
