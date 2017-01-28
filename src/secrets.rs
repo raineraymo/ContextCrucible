@@ -215,3 +215,18 @@ fn looks_secret_name(name: &str) -> bool {
     ];
     NEEDLES.iter().any(|n| lower.contains(n))
 }
+
+/// A value is "high entropy" if it is long enough and mixes character classes,
+/// rejecting obvious placeholders like `changeme` or `your-token-here`.
+pub fn high_entropy_value(v: &str) -> bool {
+    if v.len() < 16 {
+        return false;
+    }
+    let lower = v.to_ascii_lowercase();
+    const PLACEHOLDERS: &[&str] = &[
+        "changeme",
+        "your",
+        "example",
+        "placeholder",
+        "todo",
+        "xxxx",
