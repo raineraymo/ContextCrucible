@@ -184,3 +184,18 @@ fn split_assignment(s: &str) -> Option<(String, String)> {
     let sep = s.find('=').or_else(|| s.find(':'))?;
     let name = s[..sep]
         .trim()
+        .trim_matches(|c| c == '"' || c == '\'')
+        .to_string();
+    let value_raw = s[sep + 1..].trim();
+    // Strip surrounding quotes and trailing commas / semicolons.
+    let value = value_raw
+        .trim_matches(|c| c == '"' || c == '\'' || c == ',' || c == ';' || c == ' ')
+        .to_string();
+    if name.is_empty() || value.is_empty() {
+        return None;
+    }
+    Some((name, value))
+}
+
+fn looks_secret_name(name: &str) -> bool {
+    let lower = name.to_ascii_lowercase();
