@@ -230,3 +230,19 @@ pub fn high_entropy_value(v: &str) -> bool {
         "placeholder",
         "todo",
         "xxxx",
+        "dummy",
+        "redacted",
+        "<",
+        "${",
+        "{{",
+    ];
+    if PLACEHOLDERS.iter().any(|p| lower.contains(p)) {
+        return false;
+    }
+    let has_lower = v.chars().any(|c| c.is_ascii_lowercase());
+    let has_upper = v.chars().any(|c| c.is_ascii_uppercase());
+    let has_digit = v.chars().any(|c| c.is_ascii_digit());
+    let classes = [has_lower, has_upper, has_digit]
+        .iter()
+        .filter(|b| **b)
+        .count();
