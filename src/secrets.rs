@@ -261,3 +261,18 @@ mod tests {
     use super::*;
 
     #[test]
+    fn detects_aws_key() {
+        let f = scan("aws_key = AKIAIOSFODNN7EXAMPLE\n");
+        assert!(f.iter().any(|x| x.rule == "aws-access-key-id"));
+    }
+
+    #[test]
+    fn detects_private_key_header() {
+        let f = scan("-----BEGIN RSA PRIVATE KEY-----\n");
+        assert_eq!(f[0].rule, "private-key-pem");
+        assert!(f[0].confidence >= QUARANTINE_CONFIDENCE);
+    }
+
+    #[test]
+    fn detects_github_token() {
+        let tok = format!("token: ghp_{}", "a".repeat(36));
