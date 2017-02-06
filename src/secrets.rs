@@ -246,3 +246,18 @@ pub fn high_entropy_value(v: &str) -> bool {
         .iter()
         .filter(|b| **b)
         .count();
+    let alnum = v.chars().filter(|c| c.is_ascii_alphanumeric()).count();
+    classes >= 2 && alnum >= 12
+}
+
+/// Redact a matched secret, keeping only a short prefix.
+pub fn redact(secret: &str) -> String {
+    let keep = secret.chars().take(4).collect::<String>();
+    format!("{}…[redacted:{} chars]", keep, secret.len())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
