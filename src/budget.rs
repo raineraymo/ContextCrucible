@@ -28,3 +28,19 @@ pub struct Solution {
     pub selected: Vec<String>,
     /// Total tokens consumed.
     pub tokens_used: u64,
+    /// Total captured relevance.
+    pub value: f64,
+    /// Which algorithm produced the result: `"dp"` or `"greedy"`.
+    pub method: &'static str,
+}
+
+/// Maximum number of DP grid cells (items × buckets) before we fall back to
+/// greedy. Keeps worst-case memory and time bounded.
+const MAX_DP_CELLS: u64 = 4_000_000;
+
+/// Number of token buckets the budget is quantised into for the DP. Finer
+/// buckets = more precise, but more cells.
+const DP_BUCKETS: u64 = 2_000;
+
+/// Solve the hard-budget selection.
+///
