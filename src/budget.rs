@@ -44,3 +44,18 @@ const DP_BUCKETS: u64 = 2_000;
 
 /// Solve the hard-budget selection.
 ///
+/// `budget` is the maximum total tokens. Items exceeding the budget on their
+/// own are automatically infeasible and excluded.
+pub fn solve(items: &[Item], budget: u64) -> Solution {
+    if budget == 0 || items.is_empty() {
+        return Solution {
+            selected: Vec::new(),
+            tokens_used: 0,
+            value: 0.0,
+            method: "empty",
+        };
+    }
+
+    // Deterministic canonical ordering of the input.
+    let mut ordered: Vec<&Item> = items.iter().collect();
+    ordered.sort_by(|a, b| {
