@@ -153,3 +153,19 @@ fn solve_greedy(items: &[&Item], budget: u64) -> Solution {
             .then(
                 b.score
                     .partial_cmp(&a.score)
+                    .unwrap_or(std::cmp::Ordering::Equal),
+            )
+            .then(a.tokens.cmp(&b.tokens))
+            .then(a.id.cmp(&b.id))
+    });
+
+    let mut selected: Vec<&Item> = Vec::new();
+    let mut used = 0u64;
+    for it in ranked {
+        if used + it.tokens <= budget {
+            used += it.tokens;
+            selected.push(it);
+        }
+    }
+    finalize(selected, "greedy")
+}
