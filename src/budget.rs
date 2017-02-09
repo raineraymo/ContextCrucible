@@ -106,3 +106,19 @@ fn solve_dp(items: &[&Item], budget: u64, bucket: u64) -> Solution {
     let mut keep = vec![vec![false; cap + 1]; n];
 
     for i in 0..n {
+        let ci = costs[i];
+        let vi = values[i];
+        // Iterate capacity downward for 0/1 semantics.
+        for w in (0..=cap).rev() {
+            if ci <= w {
+                let candidate = dp[w - ci] + vi;
+                if candidate > dp[w] {
+                    dp[w] = candidate;
+                    keep[i][w] = true;
+                } else {
+                    keep[i][w] = false;
+                }
+            }
+        }
+    }
+
