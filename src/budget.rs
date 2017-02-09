@@ -91,3 +91,18 @@ pub fn solve(items: &[Item], budget: u64) -> Solution {
 /// Exact 0/1 knapsack over a quantised capacity grid.
 fn solve_dp(items: &[&Item], budget: u64, bucket: u64) -> Solution {
     let n = items.len();
+    let cap = (budget / bucket) as usize; // number of buckets
+                                          // Scale each item's cost up to bucket units (ceil so we never over-fill).
+    let costs: Vec<usize> = items
+        .iter()
+        .map(|i| (i.tokens.div_ceil(bucket)) as usize)
+        .collect();
+    // Value scaled to integers for stable comparison (score has 4 dp precision).
+    let values: Vec<i64> = items.iter().map(|i| (i.score * 10_000.0) as i64).collect();
+
+    // dp[w] = best value achievable with capacity w buckets.
+    let mut dp = vec![0i64; cap + 1];
+    // keep[i][w] = whether item i is taken at capacity w (bitset via Vec<bool>).
+    let mut keep = vec![vec![false; cap + 1]; n];
+
+    for i in 0..n {
