@@ -122,3 +122,18 @@ fn solve_dp(items: &[&Item], budget: u64, bucket: u64) -> Solution {
         }
     }
 
+    // Reconstruct selection.
+    let mut w = cap;
+    let mut chosen_idx: Vec<usize> = Vec::new();
+    for i in (0..n).rev() {
+        if w >= costs[i] && keep[i][w] {
+            chosen_idx.push(i);
+            w -= costs[i];
+        }
+    }
+    // chosen_idx is in reverse item order; restore original (priority) order.
+    chosen_idx.reverse();
+
+    // Verify against the true (unquantised) budget and drop any overflow caused
+    // by ceil rounding, lowest-value-first, to guarantee the hard bound holds.
+    let mut selected: Vec<&Item> = chosen_idx.iter().map(|&i| items[i]).collect();
