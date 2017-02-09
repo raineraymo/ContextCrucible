@@ -75,3 +75,19 @@ pub fn solve(items: &[Item], budget: u64) -> Solution {
             value: 0.0,
             method: "empty",
         };
+    }
+
+    let bucket = (budget / DP_BUCKETS).max(1);
+    let cap_buckets = budget / bucket;
+    let cells = (feasible.len() as u64).saturating_mul(cap_buckets + 1);
+
+    if cells <= MAX_DP_CELLS {
+        solve_dp(&feasible, budget, bucket)
+    } else {
+        solve_greedy(&feasible, budget)
+    }
+}
+
+/// Exact 0/1 knapsack over a quantised capacity grid.
+fn solve_dp(items: &[&Item], budget: u64, bucket: u64) -> Solution {
+    let n = items.len();
