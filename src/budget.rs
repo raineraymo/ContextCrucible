@@ -184,3 +184,19 @@ fn enforce_hard_budget(selected: &mut Vec<&Item>, budget: u64) {
             total -= selected[idx].tokens;
             selected.remove(idx);
         } else {
+            break;
+        }
+    }
+}
+
+/// Order the final selection by priority and package the solution.
+fn finalize(mut selected: Vec<&Item>, method: &'static str) -> Solution {
+    selected.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then(a.tokens.cmp(&b.tokens))
+            .then(a.id.cmp(&b.id))
+    });
+    let tokens_used = selected.iter().map(|i| i.tokens).sum();
+    let value = selected.iter().map(|i| i.score).sum();
