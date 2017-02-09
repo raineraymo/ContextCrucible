@@ -137,3 +137,19 @@ fn solve_dp(items: &[&Item], budget: u64, bucket: u64) -> Solution {
     // Verify against the true (unquantised) budget and drop any overflow caused
     // by ceil rounding, lowest-value-first, to guarantee the hard bound holds.
     let mut selected: Vec<&Item> = chosen_idx.iter().map(|&i| items[i]).collect();
+    enforce_hard_budget(&mut selected, budget);
+
+    finalize(selected, "dp")
+}
+
+/// Deterministic value-density greedy fallback.
+fn solve_greedy(items: &[&Item], budget: u64) -> Solution {
+    let mut ranked: Vec<&Item> = items.to_vec();
+    ranked.sort_by(|a, b| {
+        let da = a.score / (a.tokens.max(1) as f64);
+        let db = b.score / (b.tokens.max(1) as f64);
+        db.partial_cmp(&da)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then(
+                b.score
+                    .partial_cmp(&a.score)
