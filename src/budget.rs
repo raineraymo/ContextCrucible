@@ -59,3 +59,19 @@ pub fn solve(items: &[Item], budget: u64) -> Solution {
     // Deterministic canonical ordering of the input.
     let mut ordered: Vec<&Item> = items.iter().collect();
     ordered.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then(a.tokens.cmp(&b.tokens))
+            .then(a.id.cmp(&b.id))
+    });
+
+    // Drop items that individually exceed the budget.
+    let feasible: Vec<&Item> = ordered.into_iter().filter(|i| i.tokens <= budget).collect();
+    if feasible.is_empty() {
+        return Solution {
+            selected: Vec::new(),
+            tokens_used: 0,
+            value: 0.0,
+            method: "empty",
+        };
