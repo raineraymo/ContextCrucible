@@ -169,3 +169,18 @@ fn solve_greedy(items: &[&Item], budget: u64) -> Solution {
     }
     finalize(selected, "greedy")
 }
+
+/// Drop items (lowest value first) until the true token sum fits the budget.
+fn enforce_hard_budget(selected: &mut Vec<&Item>, budget: u64) {
+    let mut total: u64 = selected.iter().map(|i| i.tokens).sum();
+    while total > budget {
+        // Remove the least valuable item.
+        if let Some((idx, _)) = selected.iter().enumerate().min_by(|(_, a), (_, b)| {
+            a.score
+                .partial_cmp(&b.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then(b.tokens.cmp(&a.tokens))
+        }) {
+            total -= selected[idx].tokens;
+            selected.remove(idx);
+        } else {
