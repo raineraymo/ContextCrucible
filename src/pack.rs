@@ -47,3 +47,25 @@ pub struct Entry {
     pub candidate: Candidate,
     pub decision: Decision,
 }
+
+/// The complete result of a compile.
+#[derive(Debug, Clone)]
+pub struct Pack {
+    pub options_budget: u64,
+    pub options_query: String,
+    pub options_min_score: f64,
+    pub label: String,
+    pub entries: Vec<Entry>,
+    pub tokens_used: u64,
+    pub captured_value: f64,
+    pub method: String,
+    /// Files rejected during scanning, kept for the audit trail.
+    pub scan_rejected: Vec<scan::RejectedFile>,
+}
+
+impl Pack {
+    /// Included entries in fill order.
+    pub fn included(&self) -> Vec<&Entry> {
+        let mut inc: Vec<&Entry> = self
+            .entries
+            .iter()
