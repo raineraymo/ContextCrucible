@@ -231,3 +231,19 @@ mod tests {
     fn respects_hard_budget() {
         let items = vec![item("a", 60, 10.0), item("b", 60, 9.0)];
         let s = solve(&items, 100);
+        assert!(s.tokens_used <= 100, "budget exceeded: {}", s.tokens_used);
+        assert_eq!(s.selected.len(), 1);
+    }
+
+    #[test]
+    fn prefers_higher_value() {
+        let items = vec![item("low", 50, 1.0), item("high", 50, 99.0)];
+        let s = solve(&items, 50);
+        assert_eq!(s.selected, vec!["high"]);
+    }
+
+    #[test]
+    fn deterministic_across_runs() {
+        let items = vec![
+            item("a", 30, 10.0),
+            item("b", 40, 12.0),
