@@ -69,3 +69,24 @@ impl Pack {
         let mut inc: Vec<&Entry> = self
             .entries
             .iter()
+            .filter(|e| matches!(e.decision, Decision::Included { .. }))
+            .collect();
+        inc.sort_by_key(|e| match e.decision {
+            Decision::Included { rank } => rank,
+            _ => usize::MAX,
+        });
+        inc
+    }
+
+    /// Number of files in each disposition bucket.
+    pub fn counts(&self) -> (usize, usize, usize, usize, usize) {
+        let mut inc = 0;
+        let mut sec = 0;
+        let mut bud = 0;
+        let mut low = 0;
+        let mut scan = 0;
+        for e in &self.entries {
+            match e.decision {
+                Decision::Included { .. } => inc += 1,
+                Decision::ExcludedSecret => sec += 1,
+                Decision::ExcludedBudget => bud += 1,
