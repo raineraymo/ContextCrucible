@@ -247,3 +247,18 @@ mod tests {
         let items = vec![
             item("a", 30, 10.0),
             item("b", 40, 12.0),
+            item("c", 35, 11.0),
+            item("d", 20, 8.0),
+        ];
+        let s1 = solve(&items, 80);
+        let s2 = solve(&items, 80);
+        assert_eq!(s1.selected, s2.selected);
+        assert_eq!(s1.tokens_used, s2.tokens_used);
+    }
+
+    #[test]
+    fn dp_beats_naive_greedy_on_classic_case() {
+        // Classic knapsack: greedy-by-value grabs "big" (100 tokens, value 100)
+        // and stops, but the exact DP finds {m1,m2} = 100 tokens, value 101.
+        let items = vec![
+            item("big", 100, 100.0),
