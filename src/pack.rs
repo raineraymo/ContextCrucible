@@ -90,3 +90,24 @@ impl Pack {
                 Decision::Included { .. } => inc += 1,
                 Decision::ExcludedSecret => sec += 1,
                 Decision::ExcludedBudget => bud += 1,
+                Decision::ExcludedLowScore => low += 1,
+                Decision::ExcludedScan { .. } => scan += 1,
+            }
+        }
+        (inc, sec, bud, low, scan)
+    }
+}
+
+/// Compile a pack from a repository root.
+pub fn compile(root: &Path, opts: &PackOptions) -> io::Result<Pack> {
+    let scan_result = scan::scan(root, &opts.scan)?;
+    Ok(compile_from_scan(scan_result, opts))
+}
+
+/// Compile from an already-produced scan result (used by tests and comparisons).
+pub fn compile_from_scan(scan_result: ScanResult, opts: &PackOptions) -> Pack {
+    let terms = score::parse_query(&opts.query);
+
+    // Build candidates with assay + grade + secret scan.
+    let mut candidates: Vec<Candidate> = Vec::new();
+    for f in scan_result.kept {
