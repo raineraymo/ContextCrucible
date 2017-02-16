@@ -200,3 +200,19 @@ fn finalize(mut selected: Vec<&Item>, method: &'static str) -> Solution {
     });
     let tokens_used = selected.iter().map(|i| i.tokens).sum();
     let value = selected.iter().map(|i| i.score).sum();
+    Solution {
+        selected: selected.iter().map(|i| i.id.clone()).collect(),
+        tokens_used,
+        value,
+        method,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn item(id: &str, tokens: u64, score: f64) -> Item {
+        Item {
+            id: id.into(),
+            tokens,
