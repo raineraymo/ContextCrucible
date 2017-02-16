@@ -216,3 +216,18 @@ mod tests {
         Item {
             id: id.into(),
             tokens,
+            score,
+        }
+    }
+
+    #[test]
+    fn empty_budget_selects_nothing() {
+        let items = vec![item("a", 10, 5.0)];
+        let s = solve(&items, 0);
+        assert!(s.selected.is_empty());
+    }
+
+    #[test]
+    fn respects_hard_budget() {
+        let items = vec![item("a", 60, 10.0), item("b", 60, 9.0)];
+        let s = solve(&items, 100);
