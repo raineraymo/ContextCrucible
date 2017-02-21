@@ -133,3 +133,24 @@ pub fn compile_from_scan(scan_result: ScanResult, opts: &PackOptions) -> Pack {
     let mut solver_items: Vec<Item> = Vec::new();
 
     for cand in candidates {
+        if cand.is_quarantined() {
+            entries.push(Entry {
+                candidate: cand,
+                decision: Decision::ExcludedSecret,
+            });
+            continue;
+        }
+        if cand.score < opts.min_score {
+            entries.push(Entry {
+                candidate: cand,
+                decision: Decision::ExcludedLowScore,
+            });
+            continue;
+        }
+        solver_items.push(Item {
+            id: cand.rel_path.clone(),
+            tokens: cand.tokens,
+            score: cand.score,
+        });
+        entries.push(Entry {
+            candidate: cand,
