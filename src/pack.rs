@@ -154,3 +154,25 @@ pub fn compile_from_scan(scan_result: ScanResult, opts: &PackOptions) -> Pack {
         });
         entries.push(Entry {
             candidate: cand,
+            decision: Decision::ExcludedBudget,
+        });
+    }
+
+    // Solve the hard-budget selection.
+    let solution = budget::solve(&solver_items, opts.budget);
+
+    // Apply the solution: promote selected entries to Included with their rank.
+    for (rank, id) in solution.selected.iter().enumerate() {
+        if let Some(e) = entries.iter_mut().find(|e| &e.candidate.rel_path == id) {
+            e.decision = Decision::Included { rank };
+        }
+    }
+
+    Pack {
+        options_budget: opts.budget,
+        options_query: opts.query.clone(),
+        options_min_score: opts.min_score,
+        label: opts.label.clone(),
+        entries,
+        tokens_used: solution.tokens_used,
+        captured_value: solution.value,
