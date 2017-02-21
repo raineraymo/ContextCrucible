@@ -111,3 +111,25 @@ pub fn compile_from_scan(scan_result: ScanResult, opts: &PackOptions) -> Pack {
     // Build candidates with assay + grade + secret scan.
     let mut candidates: Vec<Candidate> = Vec::new();
     for f in scan_result.kept {
+        let secrets = secrets::scan(&f.content);
+        let import_hit = score::import_relevance(&f.rel_path, &f.content, &terms);
+        let parts: ScoreParts = score::grade(&f.rel_path, &f.content, &terms, import_hit);
+        let tok = tokens::estimate(&f.content);
+        candidates.push(Candidate {
+            rel_path: f.rel_path,
+            bytes: f.bytes,
+            tokens: tok,
+            score: parts.total(),
+            score_parts: parts,
+            secrets,
+            language: detect_language(&f.content),
+            content: f.content,
+        });
+    }
+    candidates.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
+
+    // Partition: quarantine secrets and low scores before the solver sees them.
+    let mut entries: Vec<Entry> = Vec::new();
+    let mut solver_items: Vec<Item> = Vec::new();
+
+    for cand in candidates {
