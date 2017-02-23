@@ -197,3 +197,24 @@ pub fn render_pack(pack: &Pack) -> String {
         out.push_str(&format!(
             "===== BEGIN {} ({} tokens, grade {:.1}, {}) =====\n",
             c.rel_path, c.tokens, c.score, c.language
+        ));
+        out.push_str(&c.content);
+        if !c.content.ends_with('\n') {
+            out.push('\n');
+        }
+        out.push_str(&format!("===== END {} =====\n\n", c.rel_path));
+    }
+    out
+}
+
+/// Render the explanatory manifest as pretty JSON.
+pub fn render_manifest(pack: &Pack) -> String {
+    let (inc, sec, bud, low, scan_ex) = pack.counts();
+
+    let summary = Json::Object(vec![
+        ("tool".into(), Json::s("contextcrucible")),
+        ("version".into(), Json::s(VERSION)),
+        ("label".into(), Json::s(&pack.label)),
+        ("query".into(), Json::s(&pack.options_query)),
+        (
+            "budget_tokens".into(),
