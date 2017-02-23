@@ -218,3 +218,25 @@ pub fn render_manifest(pack: &Pack) -> String {
         ("query".into(), Json::s(&pack.options_query)),
         (
             "budget_tokens".into(),
+            Json::Int(pack.options_budget as i64),
+        ),
+        ("tokens_used".into(), Json::Int(pack.tokens_used as i64)),
+        ("budget_utilization".into(), Json::Float(utilization(pack))),
+        ("captured_value".into(), Json::Float(pack.captured_value)),
+        ("min_score".into(), Json::Float(pack.options_min_score)),
+        ("solver_method".into(), Json::s(&pack.method)),
+        (
+            "counts".into(),
+            Json::Object(vec![
+                ("included".into(), Json::Int(inc as i64)),
+                ("excluded_secret".into(), Json::Int(sec as i64)),
+                ("excluded_budget".into(), Json::Int(bud as i64)),
+                ("excluded_low_score".into(), Json::Int(low as i64)),
+                (
+                    "excluded_scan".into(),
+                    Json::Int((scan_ex + pack.scan_rejected.len()) as i64),
+                ),
+            ]),
+        ),
+    ]);
+
