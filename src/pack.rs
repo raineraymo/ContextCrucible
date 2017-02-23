@@ -176,3 +176,24 @@ pub fn compile_from_scan(scan_result: ScanResult, opts: &PackOptions) -> Pack {
         entries,
         tokens_used: solution.tokens_used,
         captured_value: solution.value,
+        method: solution.method.to_string(),
+        scan_rejected: scan_result.rejected,
+    }
+}
+
+/// Render the pack content: a delimited concatenation of included files.
+pub fn render_pack(pack: &Pack) -> String {
+    let mut out = String::new();
+    out.push_str(&format!(
+        "# contextcrucible pack :: {} :: budget={} tokens :: used={} :: method={}\n",
+        pack.label, pack.options_budget, pack.tokens_used, pack.method
+    ));
+    if !pack.options_query.is_empty() {
+        out.push_str(&format!("# query: {}\n", pack.options_query));
+    }
+    out.push_str(&format!("# files: {}\n\n", pack.included().len()));
+    for entry in pack.included() {
+        let c = &entry.candidate;
+        out.push_str(&format!(
+            "===== BEGIN {} ({} tokens, grade {:.1}, {}) =====\n",
+            c.rel_path, c.tokens, c.score, c.language
