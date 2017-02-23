@@ -240,3 +240,24 @@ pub fn render_manifest(pack: &Pack) -> String {
         ),
     ]);
 
+    // File-level decisions (evaluated candidates).
+    let mut file_entries: Vec<Json> = Vec::new();
+    let included = pack.included();
+    for entry in &pack.entries {
+        let c = &entry.candidate;
+        let rank = included
+            .iter()
+            .position(|e| e.candidate.rel_path == c.rel_path);
+        let mut obj = vec![
+            ("path".into(), Json::s(&c.rel_path)),
+            ("decision".into(), Json::s(entry.decision.code())),
+            ("tokens".into(), Json::Int(c.tokens as i64)),
+            ("bytes".into(), Json::Int(c.bytes as i64)),
+            ("grade".into(), Json::Float(c.score)),
+            ("language".into(), Json::s(&c.language)),
+            (
+                "score_parts".into(),
+                Json::Object(vec![
+                    ("path".into(), Json::Float(c.score_parts.path)),
+                    ("query".into(), Json::Float(c.score_parts.query)),
+                    ("import".into(), Json::Float(c.score_parts.import)),
