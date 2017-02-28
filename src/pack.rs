@@ -261,3 +261,25 @@ pub fn render_manifest(pack: &Pack) -> String {
                     ("path".into(), Json::Float(c.score_parts.path)),
                     ("query".into(), Json::Float(c.score_parts.query)),
                     ("import".into(), Json::Float(c.score_parts.import)),
+                    ("symbol".into(), Json::Float(c.score_parts.symbol)),
+                ]),
+            ),
+        ];
+        if let Some(r) = rank {
+            obj.push(("fill_rank".into(), Json::Int(r as i64)));
+        }
+        if !c.secrets.is_empty() {
+            let findings: Vec<Json> = c
+                .secrets
+                .iter()
+                .map(|f| {
+                    Json::Object(vec![
+                        ("rule".into(), Json::s(&f.rule)),
+                        ("line".into(), Json::Int(f.line as i64)),
+                        ("confidence".into(), Json::Float(f.confidence)),
+                        ("redacted".into(), Json::s(&f.redacted)),
+                    ])
+                })
+                .collect();
+            obj.push(("secrets".into(), Json::Array(findings)));
+        }
