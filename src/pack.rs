@@ -283,3 +283,24 @@ pub fn render_manifest(pack: &Pack) -> String {
                 .collect();
             obj.push(("secrets".into(), Json::Array(findings)));
         }
+        if let Decision::ExcludedScan { reason } = &entry.decision {
+            obj.push(("scan_reason".into(), Json::s(reason)));
+        }
+        obj.push(("explanation".into(), Json::s(explain(entry, rank))));
+        file_entries.push(Json::Object(obj));
+    }
+
+    // Scan-rejected files (never became candidates).
+    let mut rejected_entries: Vec<Json> = Vec::new();
+    for r in &pack.scan_rejected {
+        rejected_entries.push(Json::Object(vec![
+            ("path".into(), Json::s(&r.rel_path)),
+            ("decision".into(), Json::s("exclude:scan")),
+            ("bytes".into(), Json::Int(r.bytes as i64)),
+            ("scan_reason".into(), Json::s(&r.reason)),
+        ]));
+    }
+
+    let root = Json::Object(vec![
+        ("summary".into(), summary),
+        ("files".into(), Json::Array(file_entries)),
