@@ -304,3 +304,24 @@ pub fn render_manifest(pack: &Pack) -> String {
     let root = Json::Object(vec![
         ("summary".into(), summary),
         ("files".into(), Json::Array(file_entries)),
+        ("scan_rejected".into(), Json::Array(rejected_entries)),
+    ]);
+    root.to_pretty()
+}
+
+/// Budget utilisation in `0.0..=1.0`.
+pub fn utilization(pack: &Pack) -> f64 {
+    if pack.options_budget == 0 {
+        0.0
+    } else {
+        pack.tokens_used as f64 / pack.options_budget as f64
+    }
+}
+
+fn explain(entry: &Entry, rank: Option<usize>) -> String {
+    let c = &entry.candidate;
+    match &entry.decision {
+        Decision::Included { .. } => format!(
+            "included at fill rank {} — grade {:.1} (path {:.1}/query {:.1}/import {:.1}/symbol {:.1}) for {} tokens",
+            rank.unwrap_or(0),
+            c.score,
