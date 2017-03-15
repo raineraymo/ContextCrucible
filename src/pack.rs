@@ -325,3 +325,25 @@ fn explain(entry: &Entry, rank: Option<usize>) -> String {
             "included at fill rank {} — grade {:.1} (path {:.1}/query {:.1}/import {:.1}/symbol {:.1}) for {} tokens",
             rank.unwrap_or(0),
             c.score,
+            c.score_parts.path,
+            c.score_parts.query,
+            c.score_parts.import,
+            c.score_parts.symbol,
+            c.tokens
+        ),
+        Decision::ExcludedSecret => format!(
+            "quarantined — {} secret finding(s), highest confidence {:.2}",
+            c.secrets.len(),
+            c.secrets.iter().map(|f| f.confidence).fold(0.0, f64::max)
+        ),
+        Decision::ExcludedBudget => format!(
+            "not poured — grade {:.1} at {} tokens lost the budget contest",
+            c.score, c.tokens
+        ),
+        Decision::ExcludedLowScore => format!(
+            "below floor — grade {:.1} < min_score",
+            c.score
+        ),
+        Decision::ExcludedScan { reason } => format!("rejected during scan — {}", reason),
+    }
+}
