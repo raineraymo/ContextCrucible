@@ -347,3 +347,24 @@ fn explain(entry: &Entry, rank: Option<usize>) -> String {
         Decision::ExcludedScan { reason } => format!("rejected during scan — {}", reason),
     }
 }
+
+/// Best-effort language label from content shape / shebang.
+pub fn detect_language(content: &str) -> String {
+    let head = content.trim_start();
+    if head.starts_with("#!") {
+        if head.contains("python") {
+            return "python".into();
+        }
+        if head.contains("node") {
+            return "javascript".into();
+        }
+        if head.contains("bash") || head.contains("/sh") {
+            return "shell".into();
+        }
+    }
+    if head.contains("fn main(") || head.contains("pub fn ") || head.contains("impl ") {
+        return "rust".into();
+    }
+    if head.contains("interface ") || head.contains(": string") || head.contains("export const") {
+        return "typescript".into();
+    }
