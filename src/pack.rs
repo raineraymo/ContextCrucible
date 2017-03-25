@@ -368,3 +368,25 @@ pub fn detect_language(content: &str) -> String {
     if head.contains("interface ") || head.contains(": string") || head.contains("export const") {
         return "typescript".into();
     }
+    if head.contains("def ") && head.contains(':') {
+        return "python".into();
+    }
+    "text".into()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::scan::{RejectedFile, ScannedFile};
+
+    fn scanned(path: &str, content: &str) -> ScannedFile {
+        ScannedFile {
+            rel_path: path.into(),
+            bytes: content.len() as u64,
+            content: content.into(),
+        }
+    }
+
+    fn scan_result(files: Vec<ScannedFile>) -> ScanResult {
+        ScanResult {
+            kept: files,
