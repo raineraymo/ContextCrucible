@@ -390,3 +390,24 @@ mod tests {
     fn scan_result(files: Vec<ScannedFile>) -> ScanResult {
         ScanResult {
             kept: files,
+            rejected: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn secrets_are_excluded() {
+        let sr = scan_result(vec![
+            scanned("safe.rs", "fn main() {}\n"),
+            scanned("creds.rs", "let k = AKIAIOSFODNN7EXAMPLE;\n"),
+        ]);
+        let pack = compile_from_scan(sr, &PackOptions::default());
+        let creds = pack
+            .entries
+            .iter()
+            .find(|e| e.candidate.rel_path == "creds.rs")
+            .unwrap();
+        assert_eq!(creds.decision, Decision::ExcludedSecret);
+    }
+
+    #[test]
+    fn budget_is_respected() {
