@@ -411,3 +411,24 @@ mod tests {
 
     #[test]
     fn budget_is_respected() {
+        let big = "x ".repeat(5000);
+        let sr = scan_result(vec![scanned("a.rs", &big), scanned("b.rs", &big)]);
+        let opts = PackOptions {
+            budget: 1200,
+            ..PackOptions::default()
+        };
+        let pack = compile_from_scan(sr, &opts);
+        assert!(pack.tokens_used <= 1200);
+    }
+
+    #[test]
+    fn query_promotes_relevant_file() {
+        let sr = scan_result(vec![
+            scanned("budget.rs", "fn solve_budget() { /* budget budget */ }\n"),
+            scanned("unrelated.rs", "fn hello() {}\n"),
+        ]);
+        let opts = PackOptions {
+            budget: 50,
+            query: "budget".into(),
+            ..PackOptions::default()
+        };
