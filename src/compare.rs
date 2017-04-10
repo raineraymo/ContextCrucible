@@ -54,3 +54,19 @@ impl Comparison {
         ));
         out.push_str(&format!(
             "  value  : {:.1} → {:.1} ({:+.1})\n",
+            self.value_a,
+            self.value_b,
+            self.value_delta()
+        ));
+        out.push_str(&format!(
+            "  util   : {:.1}% → {:.1}%\n",
+            self.util_a * 100.0,
+            self.util_b * 100.0
+        ));
+        out.push_str(&format!("  added ({}):\n", self.added.len()));
+        for f in &self.added {
+            out.push_str(&format!("    + {}\n", f));
+        }
+        out.push_str(&format!("  removed ({}):\n", self.removed.len()));
+        for f in &self.removed {
+            out.push_str(&format!("    - {}\n", f));
