@@ -70,3 +70,19 @@ impl Comparison {
         out.push_str(&format!("  removed ({}):\n", self.removed.len()));
         for f in &self.removed {
             out.push_str(&format!("    - {}\n", f));
+        }
+        out.push_str(&format!("  retained: {} file(s)\n", self.retained.len()));
+        out
+    }
+
+    /// Render the comparison as JSON.
+    pub fn to_json(&self) -> String {
+        let arr = |v: &[String]| Json::Array(v.iter().map(Json::s).collect());
+        Json::Object(vec![
+            ("baseline".into(), Json::s(&self.label_a)),
+            ("candidate".into(), Json::s(&self.label_b)),
+            ("tokens_a".into(), Json::Int(self.tokens_a as i64)),
+            ("tokens_b".into(), Json::Int(self.tokens_b as i64)),
+            ("token_delta".into(), Json::Int(self.token_delta())),
+            ("value_a".into(), Json::Float(self.value_a)),
+            ("value_b".into(), Json::Float(self.value_b)),
