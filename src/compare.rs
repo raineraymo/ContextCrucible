@@ -38,3 +38,19 @@ impl Comparison {
     pub fn token_delta(&self) -> i64 {
         self.tokens_b as i64 - self.tokens_a as i64
     }
+
+    /// Render a compact human-readable report.
+    pub fn to_report(&self) -> String {
+        let mut out = String::new();
+        out.push_str(&format!(
+            "crucible compare :: {} → {}\n",
+            self.label_a, self.label_b
+        ));
+        out.push_str(&format!(
+            "  tokens : {} → {} ({:+})\n",
+            self.tokens_a,
+            self.tokens_b,
+            self.token_delta()
+        ));
+        out.push_str(&format!(
+            "  value  : {:.1} → {:.1} ({:+.1})\n",
