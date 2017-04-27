@@ -102,3 +102,19 @@ fn included_set(pack: &Pack) -> BTreeSet<String> {
     pack.entries
         .iter()
         .filter(|e| matches!(e.decision, Decision::Included { .. }))
+        .map(|e| e.candidate.rel_path.clone())
+        .collect()
+}
+
+/// Compare two live packs.
+pub fn compare(a: &Pack, b: &Pack) -> Comparison {
+    let set_a = included_set(a);
+    let set_b = included_set(b);
+
+    let added: Vec<String> = set_b.difference(&set_a).cloned().collect();
+    let removed: Vec<String> = set_a.difference(&set_b).cloned().collect();
+    let retained: Vec<String> = set_a.intersection(&set_b).cloned().collect();
+
+    Comparison {
+        label_a: a.label.clone(),
+        label_b: b.label.clone(),
