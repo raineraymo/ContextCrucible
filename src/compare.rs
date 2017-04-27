@@ -86,3 +86,19 @@ impl Comparison {
             ("token_delta".into(), Json::Int(self.token_delta())),
             ("value_a".into(), Json::Float(self.value_a)),
             ("value_b".into(), Json::Float(self.value_b)),
+            ("value_delta".into(), Json::Float(self.value_delta())),
+            ("util_a".into(), Json::Float(self.util_a)),
+            ("util_b".into(), Json::Float(self.util_b)),
+            ("added".into(), arr(&self.added)),
+            ("removed".into(), arr(&self.removed)),
+            ("retained".into(), arr(&self.retained)),
+        ])
+        .to_pretty()
+    }
+}
+
+/// Included file set of a pack, sorted.
+fn included_set(pack: &Pack) -> BTreeSet<String> {
+    pack.entries
+        .iter()
+        .filter(|e| matches!(e.decision, Decision::Included { .. }))
