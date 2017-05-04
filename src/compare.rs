@@ -118,3 +118,18 @@ pub fn compare(a: &Pack, b: &Pack) -> Comparison {
     Comparison {
         label_a: a.label.clone(),
         label_b: b.label.clone(),
+        tokens_a: a.tokens_used,
+        tokens_b: b.tokens_used,
+        value_a: a.captured_value,
+        value_b: b.captured_value,
+        util_a: utilization(a),
+        util_b: utilization(b),
+        added,
+        removed,
+        retained,
+    }
+}
+
+/// Scalar statistics for one manifest, paired with its included file set.
+/// Grouping these avoids threading ten positional arguments through the API.
+#[derive(Debug, Clone)]
