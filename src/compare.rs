@@ -197,3 +197,19 @@ mod tests {
                 ..Default::default()
             },
         );
+        let big = compile_from_scan(
+            files,
+            &PackOptions {
+                budget: 10_000,
+                label: "big".into(),
+                ..Default::default()
+            },
+        );
+        let cmp = compare(&small, &big);
+        assert!(cmp.tokens_b >= cmp.tokens_a);
+        assert!(cmp.retained.len() + cmp.added.len() >= 1);
+    }
+
+    #[test]
+    fn identical_packs_have_no_diff() {
+        let a = compile_from_scan(
