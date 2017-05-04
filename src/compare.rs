@@ -181,3 +181,19 @@ mod tests {
                     bytes: c.len() as u64,
                     content: (*c).into(),
                 })
+                .collect(),
+            rejected: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn detects_added_and_removed() {
+        let files = sr(&[("a.rs", "fn budget() {}\n"), ("b.rs", "fn other() {}\n")]);
+        let small = compile_from_scan(
+            sr(&[("a.rs", "fn budget() {}\n"), ("b.rs", "fn other() {}\n")]),
+            &PackOptions {
+                budget: 4,
+                label: "small".into(),
+                ..Default::default()
+            },
+        );
