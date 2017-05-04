@@ -133,3 +133,19 @@ pub fn compare(a: &Pack, b: &Pack) -> Comparison {
 /// Scalar statistics for one manifest, paired with its included file set.
 /// Grouping these avoids threading ten positional arguments through the API.
 #[derive(Debug, Clone)]
+pub struct ManifestStats {
+    pub label: String,
+    pub included: BTreeSet<String>,
+    pub tokens_used: u64,
+    pub value: f64,
+    pub budget: u64,
+}
+
+/// Compare two manifests supplied as [`ManifestStats`]. Used by the CLI
+/// `compare` subcommand when reading manifests from disk.
+pub fn compare_sets(a: &ManifestStats, b: &ManifestStats) -> Comparison {
+    let util = |used: u64, budget: u64| {
+        if budget == 0 {
+            0.0
+        } else {
+            used as f64 / budget as f64
