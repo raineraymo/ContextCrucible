@@ -149,3 +149,19 @@ pub fn compare_sets(a: &ManifestStats, b: &ManifestStats) -> Comparison {
             0.0
         } else {
             used as f64 / budget as f64
+        }
+    };
+    Comparison {
+        label_a: a.label.clone(),
+        label_b: b.label.clone(),
+        tokens_a: a.tokens_used,
+        tokens_b: b.tokens_used,
+        value_a: a.value,
+        value_b: b.value,
+        util_a: util(a.tokens_used, a.budget),
+        util_b: util(b.tokens_used, b.budget),
+        added: b.included.difference(&a.included).cloned().collect(),
+        removed: a.included.difference(&b.included).cloned().collect(),
+        retained: a.included.intersection(&b.included).cloned().collect(),
+    }
+}
