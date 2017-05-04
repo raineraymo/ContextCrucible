@@ -165,3 +165,19 @@ pub fn compare_sets(a: &ManifestStats, b: &ManifestStats) -> Comparison {
         retained: a.included.intersection(&b.included).cloned().collect(),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::pack::{compile_from_scan, PackOptions};
+    use crate::scan::{ScanResult, ScannedFile};
+
+    fn sr(files: &[(&str, &str)]) -> ScanResult {
+        ScanResult {
+            kept: files
+                .iter()
+                .map(|(p, c)| ScannedFile {
+                    rel_path: (*p).into(),
+                    bytes: c.len() as u64,
+                    content: (*c).into(),
+                })
