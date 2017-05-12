@@ -42,3 +42,15 @@ pub struct Candidate {
     /// Relevance grade in the range `0.0..=100.0` from [`score`].
     pub score: f64,
     /// Per-signal score breakdown, used by the manifest for explainability.
+    pub score_parts: score::ScoreParts,
+    /// Secret findings; a non-empty list forces exclusion.
+    pub secrets: Vec<secrets::Finding>,
+    /// Detected language label (best-effort from extension).
+    pub language: String,
+}
+
+impl Candidate {
+    /// `true` when the file carries at least one high-confidence secret finding.
+    pub fn is_quarantined(&self) -> bool {
+        self.secrets
+            .iter()
