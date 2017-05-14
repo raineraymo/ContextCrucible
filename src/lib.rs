@@ -54,3 +54,15 @@ impl Candidate {
     pub fn is_quarantined(&self) -> bool {
         self.secrets
             .iter()
+            .any(|f| f.confidence >= secrets::QUARANTINE_CONFIDENCE)
+    }
+}
+
+/// The reason a candidate was ultimately included or excluded from a pack.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Decision {
+    /// Selected by the budget solver; carries the fill order (0-based).
+    Included { rank: usize },
+    /// Rejected because it contained a likely secret.
+    ExcludedSecret,
+    /// Rejected because admitting it would breach the hard token budget.
