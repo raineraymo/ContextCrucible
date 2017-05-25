@@ -39,3 +39,22 @@ fn run(args: &[String]) -> Result<ExitCode, String> {
         "help" | "--help" | "-h" => {
             print_help();
             Ok(ExitCode::SUCCESS)
+        }
+        "compile" => cmd_compile(&args[1..]),
+        "scan" => cmd_scan(&args[1..]),
+        "compare" => cmd_compare(&args[1..]),
+        other => Err(format!(
+            "unknown subcommand `{}` (try `crucible help`)",
+            other
+        )),
+    }
+}
+
+fn print_help() {
+    println!(
+        r#"crucible {ver} — budget-aware context compiler (the token foundry)
+
+USAGE:
+    crucible <command> [options]
+
+COMMANDS:
