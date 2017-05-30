@@ -98,3 +98,23 @@ EXAMPLES:
 
 fn cmd_compile(args: &[String]) -> Result<ExitCode, String> {
     let opt = Options::parse(args)?;
+    let root = opt.path.clone().unwrap_or_else(|| PathBuf::from("."));
+    if !root.is_dir() {
+        return Err(format!("path is not a directory: {}", root.display()));
+    }
+
+    let mut scan = ScanConfig::default();
+    if let Some(mb) = opt.max_bytes {
+        scan.max_bytes = mb;
+    }
+
+    let options = PackOptions {
+        budget: opt.budget.unwrap_or(8_000),
+        query: opt.query.clone().unwrap_or_default(),
+        min_score: opt.min_score.unwrap_or(0.0),
+        scan,
+        label: opt.label.clone().unwrap_or_else(|| "pour".into()),
+    };
+
+    let pack = pack::compile(&root, &options).map_err(|e| format!("scan failed: {}", e))?;
+
