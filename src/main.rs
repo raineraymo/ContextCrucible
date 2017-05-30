@@ -78,3 +78,23 @@ SCAN OPTIONS:
     --max-bytes <n>      Size cap                           (default: 524288)
 
 COMPARE OPTIONS:
+    --a <manifest.json>  Baseline manifest
+    --b <manifest.json>  Candidate manifest
+    --json               Emit JSON instead of a text report
+
+EXAMPLES:
+    crucible compile --path . --budget 4000 --query "budget solver" \
+        --out pack.txt --manifest manifest.json
+    crucible scan --path .
+    crucible compare --a base.json --b candidate.json
+"#,
+        ver = VERSION
+    );
+}
+
+// ---------------------------------------------------------------------------
+// compile
+// ---------------------------------------------------------------------------
+
+fn cmd_compile(args: &[String]) -> Result<ExitCode, String> {
+    let opt = Options::parse(args)?;
