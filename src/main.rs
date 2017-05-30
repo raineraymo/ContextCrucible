@@ -58,3 +58,23 @@ USAGE:
     crucible <command> [options]
 
 COMMANDS:
+    compile   Pour a context pack from a repository
+    scan      Report kept / rejected files from a scan
+    compare   Weigh two manifests against each other
+    help      Show this message
+
+COMPILE OPTIONS:
+    --path <dir>         Repository root to scan            (default: .)
+    --budget <tokens>    Hard token budget                  (default: 8000)
+    --query <text>       Relevance query (quote it)         (default: none)
+    --min-score <f>      Drop files graded below this floor (default: 0)
+    --max-bytes <n>      Skip files larger than n bytes     (default: 524288)
+    --label <name>       Label recorded in the manifest     (default: pour)
+    --out <file>         Write pack content here            (default: stdout)
+    --manifest <file>    Write JSON manifest here           (optional)
+
+SCAN OPTIONS:
+    --path <dir>         Repository root to scan            (default: .)
+    --max-bytes <n>      Size cap                           (default: 524288)
+
+COMPARE OPTIONS:
