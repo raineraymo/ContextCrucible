@@ -118,3 +118,22 @@ fn cmd_compile(args: &[String]) -> Result<ExitCode, String> {
 
     let pack = pack::compile(&root, &options).map_err(|e| format!("scan failed: {}", e))?;
 
+    let pack_text = pack::render_pack(&pack);
+    match &opt.out {
+        Some(p) => {
+            fs::write(p, &pack_text).map_err(|e| format!("writing pack: {}", e))?;
+            eprintln!("crucible: pack written to {}", p.display());
+        }
+        None => print!("{}", pack_text),
+    }
+
+    if let Some(mp) = &opt.manifest {
+        let manifest = pack::render_manifest(&pack);
+        fs::write(mp, &manifest).map_err(|e| format!("writing manifest: {}", e))?;
+        eprintln!("crucible: manifest written to {}", mp.display());
+    }
+
+    let (inc, sec, bud, low, scan_ex) = pack.counts();
+    eprintln!(
+        "crucible: poured {} file(s), {} tokens / {} budget ({:.1}% util) via {}; \
+         excluded secret={} budget={} low-score={} scan={}",
