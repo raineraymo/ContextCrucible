@@ -236,3 +236,23 @@ impl ManifestView {
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+// Minimal manifest field extraction (stdlib only, tolerant of our own format)
+// ---------------------------------------------------------------------------
+
+fn extract_string(json: &str, key: &str) -> Option<String> {
+    let needle = format!("\"{}\":", key);
+    let start = json.find(&needle)? + needle.len();
+    let rest = json[start..].trim_start();
+    if !rest.starts_with('"') {
+        return None;
+    }
+    let body = &rest[1..];
+    let end = body.find('"')?;
+    Some(body[..end].to_string())
+}
+
+fn extract_number(json: &str, key: &str) -> Option<f64> {
+    let needle = format!("\"{}\":", key);
+    let start = json.find(&needle)? + needle.len();
