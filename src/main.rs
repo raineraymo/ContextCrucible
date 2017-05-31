@@ -216,3 +216,23 @@ struct ManifestView {
 impl ManifestView {
     fn load(path: &Path) -> Result<ManifestView, String> {
         let text = fs::read_to_string(path)
+            .map_err(|e| format!("reading manifest {}: {}", path.display(), e))?;
+        Ok(ManifestView {
+            label: extract_string(&text, "label").unwrap_or_else(|| path.display().to_string()),
+            tokens_used: extract_number(&text, "tokens_used").unwrap_or(0.0) as u64,
+            captured_value: extract_number(&text, "captured_value").unwrap_or(0.0),
+            budget: extract_number(&text, "budget_tokens").unwrap_or(0.0) as u64,
+            included: extract_included(&text),
+        })
+    }
+
+    fn into_stats(self) -> compare::ManifestStats {
+        compare::ManifestStats {
+            label: self.label,
+            included: self.included,
+            tokens_used: self.tokens_used,
+            value: self.captured_value,
+            budget: self.budget,
+        }
+    }
+}
