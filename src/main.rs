@@ -177,3 +177,23 @@ fn cmd_scan(args: &[String]) -> Result<ExitCode, String> {
 }
 
 // ---------------------------------------------------------------------------
+// compare
+// ---------------------------------------------------------------------------
+
+fn cmd_compare(args: &[String]) -> Result<ExitCode, String> {
+    let opt = Options::parse(args)?;
+    let a = opt
+        .a
+        .as_ref()
+        .ok_or("compare requires --a <manifest.json>")?;
+    let b = opt
+        .b
+        .as_ref()
+        .ok_or("compare requires --b <manifest.json>")?;
+
+    let man_a = ManifestView::load(a)?;
+    let man_b = ManifestView::load(b)?;
+
+    let cmp: Comparison = compare::compare_sets(&man_a.into_stats(), &man_b.into_stats());
+
+    if opt.json {
