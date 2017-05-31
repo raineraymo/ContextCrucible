@@ -157,3 +157,23 @@ fn cmd_compile(args: &[String]) -> Result<ExitCode, String> {
 fn cmd_scan(args: &[String]) -> Result<ExitCode, String> {
     let opt = Options::parse(args)?;
     let root = opt.path.clone().unwrap_or_else(|| PathBuf::from("."));
+    if !root.is_dir() {
+        return Err(format!("path is not a directory: {}", root.display()));
+    }
+    let mut cfg = ScanConfig::default();
+    if let Some(mb) = opt.max_bytes {
+        cfg.max_bytes = mb;
+    }
+    let result = contextcrucible::scan::scan(&root, &cfg).map_err(|e| e.to_string())?;
+    println!("kept {} file(s):", result.kept.len());
+    for f in &result.kept {
+        println!("  + {:>8}b  {}", f.bytes, f.rel_path);
+    }
+    println!("rejected {} file(s):", result.rejected.len());
+    for r in &result.rejected {
+        println!("  - {:<22} {}", r.reason, r.rel_path);
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
+// ---------------------------------------------------------------------------
