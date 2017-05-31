@@ -197,3 +197,22 @@ fn cmd_compare(args: &[String]) -> Result<ExitCode, String> {
     let cmp: Comparison = compare::compare_sets(&man_a.into_stats(), &man_b.into_stats());
 
     if opt.json {
+        println!("{}", cmp.to_json());
+    } else {
+        print!("{}", cmp.to_report());
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
+/// The subset of a manifest the compare command needs.
+struct ManifestView {
+    label: String,
+    included: BTreeSet<String>,
+    tokens_used: u64,
+    captured_value: f64,
+    budget: u64,
+}
+
+impl ManifestView {
+    fn load(path: &Path) -> Result<ManifestView, String> {
+        let text = fs::read_to_string(path)
