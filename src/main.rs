@@ -137,3 +137,23 @@ fn cmd_compile(args: &[String]) -> Result<ExitCode, String> {
     eprintln!(
         "crucible: poured {} file(s), {} tokens / {} budget ({:.1}% util) via {}; \
          excluded secret={} budget={} low-score={} scan={}",
+        inc,
+        pack.tokens_used,
+        pack.options_budget,
+        pack::utilization(&pack) * 100.0,
+        pack.method,
+        sec,
+        bud,
+        low,
+        scan_ex + pack.scan_rejected.len(),
+    );
+    Ok(ExitCode::SUCCESS)
+}
+
+// ---------------------------------------------------------------------------
+// scan
+// ---------------------------------------------------------------------------
+
+fn cmd_scan(args: &[String]) -> Result<ExitCode, String> {
+    let opt = Options::parse(args)?;
+    let root = opt.path.clone().unwrap_or_else(|| PathBuf::from("."));
