@@ -335,3 +335,23 @@ impl Options {
                 "--min-score" => o.min_score = Some(parse_f64(&take()?, "--min-score")?),
                 "--max-bytes" => o.max_bytes = Some(parse_u64(&take()?, "--max-bytes")?),
                 "--label" => o.label = Some(take()?),
+                "--out" => o.out = Some(PathBuf::from(take()?)),
+                "--manifest" => o.manifest = Some(PathBuf::from(take()?)),
+                "--a" => o.a = Some(PathBuf::from(take()?)),
+                "--b" => o.b = Some(PathBuf::from(take()?)),
+                "--json" => o.json = true,
+                other => return Err(format!("unknown option `{}`", other)),
+            }
+            i += 1;
+        }
+        Ok(o)
+    }
+}
+
+fn parse_u64(s: &str, flag: &str) -> Result<u64, String> {
+    s.parse::<u64>()
+        .map_err(|_| format!("{} expects a non-negative integer, got `{}`", flag, s))
+}
+
+fn parse_f64(s: &str, flag: &str) -> Result<f64, String> {
+    s.parse::<f64>()
