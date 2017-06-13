@@ -256,3 +256,23 @@ fn extract_string(json: &str, key: &str) -> Option<String> {
 fn extract_number(json: &str, key: &str) -> Option<f64> {
     let needle = format!("\"{}\":", key);
     let start = json.find(&needle)? + needle.len();
+    let rest = json[start..].trim_start();
+    let end = rest
+        .find(|c: char| !(c.is_ascii_digit() || c == '.' || c == '-' || c == '+'))
+        .unwrap_or(rest.len());
+    rest[..end].parse::<f64>().ok()
+}
+
+/// Collect the `path` of every file entry whose `decision` is `include`.
+fn extract_included(json: &str) -> BTreeSet<String> {
+    let mut set = BTreeSet::new();
+    // Walk each object beginning with a "path" key inside the "files" array.
+    let mut cursor = 0;
+    while let Some(rel) = json[cursor..].find("\"path\":") {
+        let abs = cursor + rel;
+        // path value
+        let after = abs + "\"path\":".len();
+        let seg = &json[after..];
+        let seg_trim = seg.trim_start();
+        if !seg_trim.starts_with('"') {
+            cursor = after;
