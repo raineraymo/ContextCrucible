@@ -296,3 +296,22 @@ fn extract_included(json: &str) -> BTreeSet<String> {
     }
     set
 }
+
+// ---------------------------------------------------------------------------
+// Hand-rolled option parsing
+// ---------------------------------------------------------------------------
+
+#[derive(Default)]
+struct Options {
+    path: Option<PathBuf>,
+    budget: Option<u64>,
+    query: Option<String>,
+    min_score: Option<f64>,
+    max_bytes: Option<u64>,
+    label: Option<String>,
+    out: Option<PathBuf>,
+    manifest: Option<PathBuf>,
+    a: Option<PathBuf>,
+    b: Option<PathBuf>,
+    json: bool,
+}
