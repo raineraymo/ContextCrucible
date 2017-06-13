@@ -315,3 +315,23 @@ struct Options {
     b: Option<PathBuf>,
     json: bool,
 }
+
+impl Options {
+    fn parse(args: &[String]) -> Result<Options, String> {
+        let mut o = Options::default();
+        let mut i = 0;
+        while i < args.len() {
+            let arg = args[i].as_str();
+            let mut take = || {
+                i += 1;
+                args.get(i)
+                    .cloned()
+                    .ok_or_else(|| format!("missing value for {}", arg))
+            };
+            match arg {
+                "--path" => o.path = Some(PathBuf::from(take()?)),
+                "--budget" => o.budget = Some(parse_u64(&take()?, "--budget")?),
+                "--query" => o.query = Some(take()?),
+                "--min-score" => o.min_score = Some(parse_f64(&take()?, "--min-score")?),
+                "--max-bytes" => o.max_bytes = Some(parse_u64(&take()?, "--max-bytes")?),
+                "--label" => o.label = Some(take()?),
