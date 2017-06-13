@@ -276,3 +276,23 @@ fn extract_included(json: &str) -> BTreeSet<String> {
         let seg_trim = seg.trim_start();
         if !seg_trim.starts_with('"') {
             cursor = after;
+            continue;
+        }
+        let body = &seg_trim[1..];
+        let path = match body.find('"') {
+            Some(end) => body[..end].to_string(),
+            None => {
+                cursor = after;
+                continue;
+            }
+        };
+        // Look ahead for the decision within a bounded window of this entry.
+        let window_end = (abs + 400).min(json.len());
+        let window = &json[abs..window_end];
+        if window.contains("\"decision\": \"include\"") {
+            set.insert(path);
+        }
+        cursor = after;
+    }
+    set
+}
