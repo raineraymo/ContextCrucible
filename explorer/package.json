@@ -8,3 +8,11 @@
     "crucible-explorer": "dist/cli.js"
   },
   "main": "dist/explorer.js",
+  "types": "dist/explorer.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.json && node --test dist/explorer.test.js",
