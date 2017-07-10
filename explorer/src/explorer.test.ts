@@ -31,3 +31,20 @@ function sampleManifest(): Manifest {
       counts: {
         included: 3,
         excluded_secret: 1,
+        excluded_budget: 0,
+        excluded_low_score: 0,
+        excluded_scan: 1,
+      },
+    },
+    files: [
+      {
+        path: "src/budget.rs",
+        decision: "include",
+        tokens: 500,
+        bytes: 1000,
+        grade: 83.2,
+        language: "rust",
+        score_parts: { path: 16.7, query: 33.2, import: 20, symbol: 13.3 },
+        fill_rank: 0,
+        explanation: "included",
+      },
