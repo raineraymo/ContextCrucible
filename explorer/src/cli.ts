@@ -30,3 +30,15 @@ function main(argv: string[]): number {
   let asJson = false;
   let path: string | undefined;
   for (const a of args) {
+    if (a === "--json") {
+      asJson = true;
+    } else {
+      path = a;
+    }
+  }
+  if (!path) {
+    process.stderr.write("crucible-explorer: missing manifest path\n");
+    return 1;
+  }
+
+  let text: string;
