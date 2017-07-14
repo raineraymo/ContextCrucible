@@ -115,3 +115,20 @@ test("includedFiles returns only includes in fill order", () => {
   );
 });
 
+test("allocationByDirectory groups and computes shares", () => {
+  const m = sampleManifest();
+  const buckets = allocationByDirectory(m);
+  // src (800) largest, then <root> (200) for main.py.
+  assert.equal(buckets[0].key, "src");
+  assert.equal(buckets[0].tokens, 800);
+  const rootBucket = buckets.find((b) => b.key === "<root>");
+  assert.ok(rootBucket);
+  assert.equal(rootBucket?.tokens, 200);
+  // Shares must sum to ~1.
+  const totalShare = buckets.reduce((s, b) => s + b.share, 0);
+  assert.ok(Math.abs(totalShare - 1) < 1e-9);
+});
+
+test("allocationByLanguage groups by language", () => {
+  const m = sampleManifest();
+  const buckets = allocationByLanguage(m);
