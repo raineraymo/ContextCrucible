@@ -82,3 +82,20 @@ function sampleManifest(): Manifest {
           { rule: "aws-access-key-id", line: 8, confidence: 0.97, redacted: "AKIA…" },
         ],
         explanation: "quarantined",
+      },
+    ],
+    scan_rejected: [
+      { path: "web/bundle.min.js", decision: "exclude:scan", bytes: 174, scan_reason: "generated:suffix" },
+    ],
+  };
+}
+
+test("parseManifest accepts a well-formed manifest", () => {
+  const json = JSON.stringify(sampleManifest());
+  const m = parseManifest(json);
+  assert.equal(m.summary.label, "test");
+  assert.equal(m.files.length, 4);
+});
+
+test("parseManifest rejects invalid JSON", () => {
+  assert.throws(() => parseManifest("{not json"), /not valid JSON/);
