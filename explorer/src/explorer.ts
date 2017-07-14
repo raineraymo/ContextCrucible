@@ -40,3 +40,20 @@ export interface ManifestSummary {
   label: string;
   query: string;
   budget_tokens: number;
+  tokens_used: number;
+  budget_utilization: number;
+  captured_value: number;
+  min_score: number;
+  solver_method: string;
+  counts: {
+    included: number;
+    excluded_secret: number;
+    excluded_budget: number;
+    excluded_low_score: number;
+    excluded_scan: number;
+  };
+}
+
+/** A parsed manifest. */
+export interface Manifest {
+  summary: ManifestSummary;
