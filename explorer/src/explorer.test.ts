@@ -99,3 +99,19 @@ test("parseManifest accepts a well-formed manifest", () => {
 
 test("parseManifest rejects invalid JSON", () => {
   assert.throws(() => parseManifest("{not json"), /not valid JSON/);
+});
+
+test("parseManifest rejects a manifest without files", () => {
+  assert.throws(() => parseManifest('{"summary":{}}'), /files/);
+});
+
+test("includedFiles returns only includes in fill order", () => {
+  const m = sampleManifest();
+  const inc = includedFiles(m);
+  assert.equal(inc.length, 3);
+  assert.deepEqual(
+    inc.map((f) => f.path),
+    ["src/budget.rs", "src/util.rs", "main.py"],
+  );
+});
+
