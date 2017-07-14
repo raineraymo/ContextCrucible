@@ -23,3 +23,20 @@ export interface ManifestFile {
     symbol: number;
   };
   fill_rank?: number;
+  secrets?: Array<{
+    rule: string;
+    line: number;
+    confidence: number;
+    redacted: string;
+  }>;
+  scan_reason?: string;
+  explanation: string;
+}
+
+/** The summary block of a manifest. */
+export interface ManifestSummary {
+  tool: string;
+  version: string;
+  label: string;
+  query: string;
+  budget_tokens: number;
