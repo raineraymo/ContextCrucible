@@ -57,3 +57,21 @@ export interface ManifestSummary {
 /** A parsed manifest. */
 export interface Manifest {
   summary: ManifestSummary;
+  files: ManifestFile[];
+  scan_rejected: Array<{
+    path: string;
+    decision: string;
+    bytes: number;
+    scan_reason: string;
+  }>;
+}
+
+/**
+ * Parse and validate a manifest from a JSON string. Throws a descriptive
+ * error if a required field is missing or mistyped.
+ */
+export function parseManifest(json: string): Manifest {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(json);
+  } catch (err) {
