@@ -75,3 +75,20 @@ export function parseManifest(json: string): Manifest {
   try {
     raw = JSON.parse(json);
   } catch (err) {
+    throw new Error(`manifest is not valid JSON: ${(err as Error).message}`);
+  }
+  if (typeof raw !== "object" || raw === null) {
+    throw new Error("manifest must be a JSON object");
+  }
+  const obj = raw as Record<string, unknown>;
+  if (typeof obj.summary !== "object" || obj.summary === null) {
+    throw new Error("manifest is missing a 'summary' object");
+  }
+  if (!Array.isArray(obj.files)) {
+    throw new Error("manifest is missing a 'files' array");
+  }
+  const summary = obj.summary as ManifestSummary;
+  const files = obj.files as ManifestFile[];
+  const scan_rejected = Array.isArray(obj.scan_rejected)
+    ? (obj.scan_rejected as Manifest["scan_rejected"])
+    : [];
