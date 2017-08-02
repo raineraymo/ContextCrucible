@@ -127,3 +127,20 @@ export function allocationByDirectory(manifest: Manifest): AllocationBucket[] {
     groups.set(key, cur);
   }
   const buckets: AllocationBucket[] = [];
+  for (const [key, v] of groups) {
+    buckets.push({
+      key,
+      tokens: v.tokens,
+      files: v.files,
+      share: total === 0 ? 0 : v.tokens / total,
+    });
+  }
+  // Deterministic ordering: largest allocation first, ties broken by name.
+  buckets.sort((a, b) => b.tokens - a.tokens || a.key.localeCompare(b.key));
+  return buckets;
+}
+
+/** Aggregate token allocation grouped by detected language. */
+export function allocationByLanguage(manifest: Manifest): AllocationBucket[] {
+  const included = includedFiles(manifest);
+  const total = included.reduce((sum, f) => sum + f.tokens, 0);
