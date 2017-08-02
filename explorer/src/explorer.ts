@@ -92,3 +92,20 @@ export function parseManifest(json: string): Manifest {
   const scan_rejected = Array.isArray(obj.scan_rejected)
     ? (obj.scan_rejected as Manifest["scan_rejected"])
     : [];
+  return { summary, files, scan_rejected };
+}
+
+/** Files that were included in the pack, ordered by fill rank. */
+export function includedFiles(manifest: Manifest): ManifestFile[] {
+  return manifest.files
+    .filter((f) => f.decision === "include")
+    .sort((a, b) => (a.fill_rank ?? 0) - (b.fill_rank ?? 0));
+}
+
+/** Aggregate token allocation grouped by top-level directory. */
+export interface AllocationBucket {
+  key: string;
+  tokens: number;
+  files: number;
+  share: number;
+}
