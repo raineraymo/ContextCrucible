@@ -109,3 +109,21 @@ export interface AllocationBucket {
   files: number;
   share: number;
 }
+
+/**
+ * Group included files by their first path segment (top-level directory, or
+ * "<root>" for files at the repository root) and compute token shares.
+ */
+export function allocationByDirectory(manifest: Manifest): AllocationBucket[] {
+  const included = includedFiles(manifest);
+  const total = included.reduce((sum, f) => sum + f.tokens, 0);
+  const groups = new Map<string, { tokens: number; files: number }>();
+  for (const f of included) {
+    const slash = f.path.indexOf("/");
+    const key = slash === -1 ? "<root>" : f.path.slice(0, slash);
+    const cur = groups.get(key) ?? { tokens: 0, files: 0 };
+    cur.tokens += f.tokens;
+    cur.files += 1;
+    groups.set(key, cur);
+  }
+  const buckets: AllocationBucket[] = [];
