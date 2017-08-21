@@ -92,3 +92,22 @@ mod tests {
     }
 
     #[test]
+    fn deterministic() {
+        let s = "let mut foundry = Crucible::new(42);";
+        assert_eq!(estimate(s), estimate(s));
+    }
+
+    #[test]
+    fn whitespace_collapses() {
+        let a = estimate("a b");
+        let b = estimate("a     b");
+        assert_eq!(a, b, "runs of whitespace should collapse to one segment");
+    }
+
+    #[test]
+    fn estimate_all_sums() {
+        let parts = ["alpha", "beta"];
+        let total = estimate_all(parts.iter().copied());
+        assert_eq!(total, estimate("alpha") + estimate("beta"));
+    }
+// review note: counting must be whitespace-stable
