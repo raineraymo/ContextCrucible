@@ -161,3 +161,20 @@ export function allocationByLanguage(manifest: Manifest): AllocationBucket[] {
     });
   }
   buckets.sort((a, b) => b.tokens - a.tokens || a.key.localeCompare(b.key));
+  return buckets;
+}
+
+/** Render a fixed-width horizontal bar for a fractional value in [0,1]. */
+export function bar(fraction: number, width = 30): string {
+  const clamped = Math.max(0, Math.min(1, fraction));
+  const filled = Math.round(clamped * width);
+  return "█".repeat(filled) + "·".repeat(width - filled);
+}
+
+/** Right-pad a string to a given width (deterministic, no locale effects). */
+function pad(s: string, width: number): string {
+  return s.length >= width ? s : s + " ".repeat(width - s.length);
+}
+
+/** Left-pad a number to a given width. */
+function lpad(n: number | string, width: number): string {
