@@ -144,3 +144,20 @@ export function allocationByDirectory(manifest: Manifest): AllocationBucket[] {
 export function allocationByLanguage(manifest: Manifest): AllocationBucket[] {
   const included = includedFiles(manifest);
   const total = included.reduce((sum, f) => sum + f.tokens, 0);
+  const groups = new Map<string, { tokens: number; files: number }>();
+  for (const f of included) {
+    const cur = groups.get(f.language) ?? { tokens: 0, files: 0 };
+    cur.tokens += f.tokens;
+    cur.files += 1;
+    groups.set(f.language, cur);
+  }
+  const buckets: AllocationBucket[] = [];
+  for (const [key, v] of groups) {
+    buckets.push({
+      key,
+      tokens: v.tokens,
+      files: v.files,
+      share: total === 0 ? 0 : v.tokens / total,
+    });
+  }
+  buckets.sort((a, b) => b.tokens - a.tokens || a.key.localeCompare(b.key));
