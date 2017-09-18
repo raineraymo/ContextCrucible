@@ -178,3 +178,21 @@ function pad(s: string, width: number): string {
 
 /** Left-pad a number to a given width. */
 function lpad(n: number | string, width: number): string {
+  const s = String(n);
+  return s.length >= width ? s : " ".repeat(width - s.length) + s;
+}
+
+/**
+ * Render a full textual report of a pack allocation, suitable for a terminal.
+ * Pure function of the manifest — identical input yields identical output.
+ */
+export function renderReport(manifest: Manifest): string {
+  const s = manifest.summary;
+  const lines: string[] = [];
+  lines.push("╔══════════════════════════════════════════════════════════════╗");
+  lines.push(`║ contextcrucible pack :: ${pad(s.label, 38)}║`);
+  lines.push("╚══════════════════════════════════════════════════════════════╝");
+  lines.push(`  query          : ${s.query || "(none)"}`);
+  lines.push(`  solver         : ${s.solver_method}`);
+  lines.push(
+    `  budget         : ${s.tokens_used} / ${s.budget_tokens} tokens  ` +
