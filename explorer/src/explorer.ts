@@ -196,3 +196,20 @@ export function renderReport(manifest: Manifest): string {
   lines.push(`  solver         : ${s.solver_method}`);
   lines.push(
     `  budget         : ${s.tokens_used} / ${s.budget_tokens} tokens  ` +
+      `(${(s.budget_utilization * 100).toFixed(1)}% utilised)`,
+  );
+  lines.push(`  captured value : ${s.captured_value.toFixed(1)}`);
+  lines.push(
+    `  decisions      : ${s.counts.included} in · ` +
+      `${s.counts.excluded_secret} secret · ` +
+      `${s.counts.excluded_budget} budget · ` +
+      `${s.counts.excluded_low_score} low-score · ` +
+      `${s.counts.excluded_scan} scan`,
+  );
+  lines.push("");
+
+  lines.push("  Allocation by directory");
+  lines.push("  " + "─".repeat(60));
+  for (const b of allocationByDirectory(manifest)) {
+    lines.push(
+      `  ${pad(b.key, 14)} ${bar(b.share)} ${lpad(b.tokens, 6)}t ` +
