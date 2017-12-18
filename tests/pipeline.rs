@@ -64,3 +64,19 @@ fn secret_file_is_quarantined() {
 #[test]
 fn query_prioritises_budget_solver_under_tight_budget() {
     // Tight budget: budget_solver.rs (~546 tokens, grade 83) is by far the most
+    // relevant to "budget solver knapsack" and is the only file that fits.
+    let pack = compile(600, "budget solver knapsack", "tight");
+    let included: Vec<String> = pack
+        .included()
+        .iter()
+        .map(|e| e.candidate.rel_path.clone())
+        .collect();
+    assert!(
+        included.iter().any(|p| p.ends_with("budget_solver.rs")),
+        "budget_solver.rs should win the tight budget, got {:?}",
+        included
+    );
+    assert!(
+        pack.tokens_used <= 600,
+        "hard budget breached: {}",
+        pack.tokens_used
