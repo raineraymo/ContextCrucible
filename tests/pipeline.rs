@@ -30,3 +30,20 @@ fn compile(budget: u64, query: &str, label: &str) -> pack::Pack {
 #[test]
 fn scanner_rejects_generated_and_keeps_source() {
     let cfg = ScanConfig::default();
+    let result = contextcrucible::scan::scan(&fixture_root(), &cfg).expect("scan");
+
+    let kept: Vec<&str> = result.kept.iter().map(|f| f.rel_path.as_str()).collect();
+    assert!(kept.iter().any(|p| p.ends_with("budget_solver.rs")));
+    assert!(kept.iter().any(|p| p.ends_with("main.py")));
+
+    // The minified bundle must be rejected as generated.
+    let rejected: Vec<&str> = result
+        .rejected
+        .iter()
+        .map(|r| r.rel_path.as_str())
+        .collect();
+    assert!(
+        rejected.iter().any(|p| p.ends_with("bundle.min.js")),
+        "min.js should be rejected, rejected = {:?}",
+        rejected
+    );
