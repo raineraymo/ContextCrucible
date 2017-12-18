@@ -14,3 +14,19 @@ fn fixture_root() -> PathBuf {
     p.push("fixtures");
     p.push("sample-repo");
     p
+}
+
+fn compile(budget: u64, query: &str, label: &str) -> pack::Pack {
+    let opts = PackOptions {
+        budget,
+        query: query.to_string(),
+        min_score: 0.0,
+        scan: ScanConfig::default(),
+        label: label.to_string(),
+    };
+    pack::compile(&fixture_root(), &opts).expect("compile fixture")
+}
+
+#[test]
+fn scanner_rejects_generated_and_keeps_source() {
+    let cfg = ScanConfig::default();
