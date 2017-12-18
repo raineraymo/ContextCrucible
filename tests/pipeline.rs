@@ -47,3 +47,20 @@ fn scanner_rejects_generated_and_keeps_source() {
         "min.js should be rejected, rejected = {:?}",
         rejected
     );
+}
+
+#[test]
+fn secret_file_is_quarantined() {
+    let pack = compile(50_000, "", "secret-check");
+    let entry = pack
+        .entries
+        .iter()
+        .find(|e| e.candidate.rel_path.ends_with("secrets.yaml"))
+        .expect("secrets.yaml must be a candidate");
+    assert_eq!(entry.decision, Decision::ExcludedSecret);
+    assert!(!entry.candidate.secrets.is_empty());
+}
+
+#[test]
+fn query_prioritises_budget_solver_under_tight_budget() {
+    // Tight budget: budget_solver.rs (~546 tokens, grade 83) is by far the most
