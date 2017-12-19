@@ -113,3 +113,20 @@ fn compilation_is_deterministic() {
     assert_eq!(ain, bin);
     assert_eq!(a.tokens_used, b.tokens_used);
 }
+
+#[test]
+fn manifest_explains_every_candidate() {
+    let pack = compile(1500, "budget", "manifest");
+    let manifest = pack::render_manifest(&pack);
+    // Every kept candidate path should appear in the manifest.
+    for entry in &pack.entries {
+        assert!(
+            manifest.contains(&entry.candidate.rel_path),
+            "manifest missing {}",
+            entry.candidate.rel_path
+        );
+    }
+    assert!(manifest.contains("\"explanation\""));
+    assert!(manifest.contains("\"solver_method\""));
+}
+
