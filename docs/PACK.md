@@ -21,3 +21,16 @@ each included file wrapped in `BEGIN`/`END` delimiters:
 
 ===== BEGIN README.md (311 tokens, grade 30.3, text) =====
 # Sample Repository
+...
+===== END README.md =====
+```
+
+Files appear in **fill order** — the order the budget solver committed them,
+highest grade first. Every included file is guaranteed to end with a newline
+inside its block so concatenation never fuses two files.
+
+## The manifest
+
+The manifest is deterministic, pretty-printed JSON with three top-level keys.
+
+### `summary`
