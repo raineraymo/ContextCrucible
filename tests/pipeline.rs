@@ -80,3 +80,20 @@ fn query_prioritises_budget_solver_under_tight_budget() {
         pack.tokens_used <= 600,
         "hard budget breached: {}",
         pack.tokens_used
+    );
+}
+
+#[test]
+fn budget_is_a_hard_bound() {
+    for budget in [10u64, 100, 500, 2000] {
+        let pack = compile(budget, "budget", "bound");
+        assert!(
+            pack.tokens_used <= budget,
+            "budget {} breached with {} tokens",
+            budget,
+            pack.tokens_used
+        );
+    }
+}
+
+#[test]
