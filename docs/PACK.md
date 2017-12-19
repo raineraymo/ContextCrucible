@@ -1,0 +1,11 @@
+# The Pack &amp; Manifest Format
+
+A `crucible compile` run produces two artefacts: a **pack** (the actual context
+to feed an agent) and a **manifest** (a JSON audit trail of every decision).
+This document specifies both so downstream tools — like the TypeScript explorer
+in `explorer/` — can consume them reliably.
+
+## The pack
+
+The pack is a UTF-8 text file. Its first lines are a comment header, followed by
+each included file wrapped in `BEGIN`/`END` delimiters:
