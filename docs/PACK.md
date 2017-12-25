@@ -34,3 +34,16 @@ inside its block so concatenation never fuses two files.
 The manifest is deterministic, pretty-printed JSON with three top-level keys.
 
 ### `summary`
+
+| Field                | Type   | Meaning                                            |
+|----------------------|--------|----------------------------------------------------|
+| `tool`               | string | Always `"contextcrucible"`.                        |
+| `version`            | string | Crate version that produced the pack.              |
+| `label`              | string | The `--label` given at compile time.               |
+| `query`              | string | The relevance query (may be empty).                |
+| `budget_tokens`      | int    | The hard token budget.                             |
+| `tokens_used`        | int    | Tokens actually consumed (always `<= budget`).     |
+| `budget_utilization` | float  | `tokens_used / budget_tokens`, `0..=1`.            |
+| `captured_value`     | float  | Sum of grades of included files.                   |
+| `min_score`          | float  | The relevance floor applied.                       |
+| `solver_method`      | string | `"dp"`, `"greedy"`, or `"empty"`.                  |
