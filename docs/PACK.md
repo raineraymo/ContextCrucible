@@ -47,3 +47,16 @@ The manifest is deterministic, pretty-printed JSON with three top-level keys.
 | `captured_value`     | float  | Sum of grades of included files.                   |
 | `min_score`          | float  | The relevance floor applied.                       |
 | `solver_method`      | string | `"dp"`, `"greedy"`, or `"empty"`.                  |
+| `counts`             | object | Per-disposition file counts (see below).           |
+
+`counts` has: `included`, `excluded_secret`, `excluded_budget`,
+`excluded_low_score`, `excluded_scan`.
+
+### `files`
+
+An array, one object per **evaluated candidate** (files that survived scanning).
+Each entry explains its fate:
+
+```json
+{
+  "path": "src/budget_solver.rs",
