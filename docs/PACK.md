@@ -60,3 +60,16 @@ Each entry explains its fate:
 ```json
 {
   "path": "src/budget_solver.rs",
+  "decision": "include",
+  "tokens": 546,
+  "bytes": 1139,
+  "grade": 83.25,
+  "language": "rust",
+  "score_parts": { "path": 16.67, "query": 33.25, "import": 20.0, "symbol": 13.33 },
+  "fill_rank": 0,
+  "explanation": "included at fill rank 0 — grade 83.2 ..."
+}
+```
+
+`decision` is one of:
+
