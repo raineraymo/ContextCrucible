@@ -73,3 +73,16 @@ Each entry explains its fate:
 
 `decision` is one of:
 
+| Code                | Reason                                                  |
+|---------------------|---------------------------------------------------------|
+| `include`           | Selected by the budget solver.                          |
+| `exclude:secret`    | Quarantined — a likely credential was detected.         |
+| `exclude:budget`    | Lost the budget contest.                                |
+| `exclude:low-score` | Fell below `min_score`.                                 |
+| `exclude:scan`      | Rejected during scanning (also listed in `scan_rejected`). |
+
+`score_parts` always sums (clamped) to `grade`. When a file carries secrets a
+`secrets` array is present with `rule`, `line`, `confidence`, and a **redacted**
+excerpt — the raw secret is never written to the manifest.
+
+### `scan_rejected`
