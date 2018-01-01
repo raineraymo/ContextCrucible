@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img" aria-label="Budget smelter: animated bars showing how a token budget is allocated across files by relevance">
+  <title>budget smelter: token allocation</title>
+  <desc>Animated horizontal bars fill to show how a fixed token budget is poured into the highest-relevance files first, with lower-relevance files receiving less or nothing once the budget line is reached.</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#141a2c"/>
