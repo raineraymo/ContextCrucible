@@ -31,3 +31,12 @@
   <text x="566" y="94" font-family="Consolas,Menlo,monospace" font-size="10" fill="#ff8a80">budget</text>
 
   <!-- rows -->
+  <g font-family="Consolas,Menlo,monospace" font-size="11" fill="#cfd6ea">
+    <!-- row 1: budget_solver.rs, grade 83 -->
+    <text x="30" y="112">budget_solver.rs</text>
+    <rect x="180" y="102" width="0" height="16" rx="3" fill="url(#hot)">
+      <animate attributeName="width" values="0;360;360" keyTimes="0;0.4;1" dur="5s" repeatCount="indefinite"/>
+    </rect>
+    <text x="470" y="114" fill="#ffcf6b">grade 83</text>
+
+    <!-- row 2: README.md, grade 30 -->
