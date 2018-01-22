@@ -59,3 +59,12 @@
         <animate attributeName="height" values="0;41;41;0" keyTimes="0;0.45;0.85;1" dur="6s" repeatCount="indefinite"/>
       </rect>
     </g>
+    <line x1="0" y1="10" x2="220" y2="10" stroke="#ff5252" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="226" y="14" font-family="Consolas,Menlo,monospace" font-size="10" fill="#ff8a80">budget</text>
+    <text x="110" y="72" text-anchor="middle" font-family="Consolas,Menlo,monospace" font-size="11" fill="#8a93ad">context pack</text>
+  </g>
+
+  <!-- rejected sparks fly off (secrets / overflow) -->
+  <g fill="#ffd54f">
+    <circle cx="330" cy="215" r="2.5">
+      <animate attributeName="cx" values="330;300;270" dur="1.4s" repeatCount="indefinite"/>
