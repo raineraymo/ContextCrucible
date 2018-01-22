@@ -41,3 +41,12 @@
     <ellipse cx="40" cy="0" rx="32" ry="7" fill="url(#molten)">
       <animate attributeName="ry" values="7;5;7" dur="2s" repeatCount="indefinite"/>
     </ellipse>
+  </g>
+
+  <!-- molten stream -->
+  <path d="M300 195 Q320 240 430 250" stroke="url(#molten)" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.9">
+    <animate attributeName="stroke-width" values="8;11;8" dur="1.2s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- the mold, labelled with the budget -->
+  <g transform="translate(430,235)">
