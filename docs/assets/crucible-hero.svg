@@ -50,3 +50,12 @@
 
   <!-- the mold, labelled with the budget -->
   <g transform="translate(430,235)">
+    <rect x="0" y="0" width="220" height="55" rx="6" fill="#1c2333" stroke="#3a4152" stroke-width="2"/>
+    <!-- fill level rises to the budget line -->
+    <clipPath id="moldClip"><rect x="4" y="4" width="212" height="47" rx="4"/></clipPath>
+    <g clip-path="url(#moldClip)">
+      <rect x="4" y="51" width="212" height="47" fill="url(#molten)">
+        <animate attributeName="y" values="51;10;10;51" keyTimes="0;0.45;0.85;1" dur="6s" repeatCount="indefinite"/>
+        <animate attributeName="height" values="0;41;41;0" keyTimes="0;0.45;0.85;1" dur="6s" repeatCount="indefinite"/>
+      </rect>
+    </g>
