@@ -21,3 +21,11 @@ cargo run -- compile \
   --path fixtures/sample-repo \
   --budget 1200 \
   --query "budget solver knapsack" \
+  --label demo \
+  --out examples/demo-pack.txt \
+  --manifest examples/demo-manifest.json
+```
+
+Visualise it with the explorer:
+
+```sh
