@@ -29,3 +29,12 @@ cargo run -- compile \
 Visualise it with the explorer:
 
 ```sh
+cd explorer && npm install && npm run build && cd ..
+node explorer/dist/cli.js examples/demo-manifest.json
+```
+
+Compile a tighter pack and compare:
+
+```sh
+cargo run -- compile --path fixtures/sample-repo --budget 600 \
+  --query "budget solver knapsack" --label tight \
