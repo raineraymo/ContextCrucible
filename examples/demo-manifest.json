@@ -41,3 +41,19 @@
       "tokens": 155,
       "bytes": 354,
       "grade": 0.0000,
+      "language": "text",
+      "score_parts": {
+        "path": 0.0000,
+        "query": 0.0000,
+        "import": 0.0000,
+        "symbol": 0.0000
+      },
+      "secrets": [
+        {
+          "rule": "aws-access-key-id",
+          "line": 8,
+          "confidence": 0.9700,
+          "redacted": "AKIA…[redacted:20 chars]"
+        }
+      ],
+      "explanation": "quarantined — 1 secret finding(s), highest confidence 0.97"
