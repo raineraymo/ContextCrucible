@@ -25,3 +25,19 @@
       "tokens": 311,
       "bytes": 670,
       "grade": 30.3333,
+      "language": "text",
+      "score_parts": {
+        "path": 0.0000,
+        "query": 30.3333,
+        "import": 0.0000,
+        "symbol": 0.0000
+      },
+      "fill_rank": 1,
+      "explanation": "included at fill rank 1 — grade 30.3 (path 0.0/query 30.3/import 0.0/symbol 0.0) for 311 tokens"
+    },
+    {
+      "path": "config/secrets.yaml",
+      "decision": "exclude:secret",
+      "tokens": 155,
+      "bytes": 354,
+      "grade": 0.0000,
