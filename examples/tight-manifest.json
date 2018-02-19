@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "tool": "contextcrucible",
+    "version": "0.4.0",
+    "label": "tight",
+    "query": "budget solver knapsack",
+    "budget_tokens": 600,
+    "tokens_used": 546,
+    "budget_utilization": 0.9100,
+    "captured_value": 83.2500,
+    "min_score": 0.0000,
