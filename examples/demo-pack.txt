@@ -41,3 +41,14 @@ pub fn knapsack(items: &[(u64, f64)], budget: u64) -> f64 {
 ===== END src/budget_solver.rs =====
 
 ===== BEGIN README.md (311 tokens, grade 30.3, text) =====
+# Sample Repository
+
+A tiny fixture repository consumed by contextcrucible's tests and examples.
+
+## Layout
+
+- `src/budget_solver.rs` — a budget allocation + knapsack solver (high relevance
+  to a "budget solver" query).
+- `src/strings.rs` — unrelated string helpers (low relevance).
+- `config/secrets.yaml` — contains a fake credential to exercise quarantine.
+- `web/bundle.min.js` — a generated artefact that the scanner rejects.
