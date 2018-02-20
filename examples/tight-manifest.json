@@ -25,3 +25,18 @@
       "tokens": 311,
       "bytes": 670,
       "grade": 30.3333,
+      "language": "text",
+      "score_parts": {
+        "path": 0.0000,
+        "query": 30.3333,
+        "import": 0.0000,
+        "symbol": 0.0000
+      },
+      "explanation": "not poured — grade 30.3 at 311 tokens lost the budget contest"
+    },
+    {
+      "path": "config/secrets.yaml",
+      "decision": "exclude:secret",
+      "tokens": 155,
+      "bytes": 354,
+      "grade": 0.0000,
