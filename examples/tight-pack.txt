@@ -1,0 +1,4 @@
+# contextcrucible pack :: tight :: budget=600 tokens :: used=546 :: method=dp
+# query: budget solver knapsack
+# files: 1
+
