@@ -6,3 +6,9 @@ labels: bug
 
 **What happened**
 
+<!-- expected vs actual -->
+
+**Minimal reproducer**
+
+```
+cargo run -- scan fixtures/sample-repo
