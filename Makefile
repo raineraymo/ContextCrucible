@@ -5,3 +5,14 @@
 
 CARGO ?= cargo
 NPM   ?= npm
+FIXTURE := fixtures/sample-repo
+
+.PHONY: all build test fmt clippy release explorer explorer-test demo compare scan clean help
+
+all: build test explorer-test
+
+## build: compile the Rust CLI (debug)
+build:
+	$(CARGO) build
+
+## release: compile the optimised release binary
