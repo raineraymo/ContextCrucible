@@ -8,3 +8,11 @@ license = "MIT"
 readme = "README.md"
 repository = "https://example.invalid/contextcrucible"
 keywords = ["context", "llm", "token-budget", "coding-agent", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "crucible"
+path = "src/main.rs"
+
+[lib]
+name = "contextcrucible"
