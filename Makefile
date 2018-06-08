@@ -28,3 +28,15 @@ fmt:
 	$(CARGO) fmt
 
 ## clippy: lint the Rust sources (if clippy is installed)
+clippy:
+	$(CARGO) clippy --all-targets -- -D warnings
+
+## explorer: build the TypeScript explorer
+explorer:
+	cd explorer && $(NPM) install --no-audit --no-fund && $(NPM) run build
+
+## explorer-test: build and test the TypeScript explorer
+explorer-test:
+	cd explorer && $(NPM) install --no-audit --no-fund && $(NPM) test
+
+## demo: compile a pack from the fixture repo and print the explorer view
