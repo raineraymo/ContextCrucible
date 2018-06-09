@@ -7,3 +7,4 @@ All notable changes to contextcrucible are documented here. The format follows
 ## [Unreleased]
 
 - planning: budget presets per model family
+
