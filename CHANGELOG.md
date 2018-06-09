@@ -5,3 +5,4 @@ All notable changes to contextcrucible are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
