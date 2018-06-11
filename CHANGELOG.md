@@ -9,3 +9,4 @@ All notable changes to contextcrucible are documented here. The format follows
 - planning: budget presets per model family
 
 ## [1.0.0] - 2026-07-08
+
