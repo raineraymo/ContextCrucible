@@ -13,3 +13,4 @@ All notable changes to contextcrucible are documented here. The format follows
 ### Added
 - frozen manifest schema (every gram of the context pack accounted for)
 - token assay with per-file relevance grades
+- secret spark-test gate before packing
