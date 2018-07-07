@@ -16,3 +16,4 @@ All notable changes to contextcrucible are documented here. The format follows
 - secret spark-test gate before packing
 - TypeScript budget explorer (`explorer/`, dependency-free)
 
+### Verified
