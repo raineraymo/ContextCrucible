@@ -18,3 +18,4 @@ All notable changes to contextcrucible are documented here. The format follows
 
 ### Verified
 - `cargo test` green (52 unit + 5 lib + 8 pipeline tests)
+- explorer `npm test` green (9 tests)
