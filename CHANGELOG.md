@@ -17,3 +17,4 @@ All notable changes to contextcrucible are documented here. The format follows
 - TypeScript budget explorer (`explorer/`, dependency-free)
 
 ### Verified
+- `cargo test` green (52 unit + 5 lib + 8 pipeline tests)
