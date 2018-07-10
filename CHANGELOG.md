@@ -23,3 +23,4 @@ All notable changes to contextcrucible are documented here. The format follows
 ## [0.6.0] - 2025-06-19
 
 ### Added
+- compare mode: two packs side by side, diff by file grade
