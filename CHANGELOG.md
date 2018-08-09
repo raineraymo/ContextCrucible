@@ -26,3 +26,4 @@ All notable changes to contextcrucible are documented here. The format follows
 - compare mode: two packs side by side, diff by file grade
 - budget report totals with per-section breakdown
 
+## [0.5.0] - 2024-04-12
