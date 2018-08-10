@@ -30,3 +30,4 @@ All notable changes to contextcrucible are documented here. The format follows
 
 ### Added
 - scan phase with language-aware token counting
+- manifest stamping with content hashes
