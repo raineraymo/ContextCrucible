@@ -33,3 +33,4 @@ All notable changes to contextcrucible are documented here. The format follows
 - manifest stamping with content hashes
 
 ## [0.4.0] - 2022-09-27
+
