@@ -34,3 +34,4 @@ All notable changes to contextcrucible are documented here. The format follows
 
 ## [0.4.0] - 2022-09-27
 
+### Added
