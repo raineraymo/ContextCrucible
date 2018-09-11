@@ -36,3 +36,4 @@ All notable changes to contextcrucible are documented here. The format follows
 
 ### Added
 - secret spark-test (high-entropy + known patterns)
+- pack writer with hard-budget enforcement
