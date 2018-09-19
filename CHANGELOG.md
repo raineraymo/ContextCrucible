@@ -43,3 +43,4 @@ All notable changes to contextcrucible are documented here. The format follows
 ### Added
 - score model: relevance grades per file
 - fixture repo with planted secrets for tests
+
