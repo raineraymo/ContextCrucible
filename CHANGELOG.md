@@ -46,3 +46,4 @@ All notable changes to contextcrucible are documented here. The format follows
 
 ## [0.2.0] - 2019-11-06
 
+### Added
