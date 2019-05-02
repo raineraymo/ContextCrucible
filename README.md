@@ -142,3 +142,126 @@ quarantined and the minified bundle never in contention.
 
 ```text
 $ node explorer/dist/cli.js examples/demo-manifest.json
+╔══════════════════════════════════════════════════════════════╗
+║ contextcrucible pack :: demo                                  ║
+╚══════════════════════════════════════════════════════════════╝
+  query          : budget solver knapsack
+  solver         : dp
+  budget         : 1178 / 1200 tokens  (98.2% utilised)
+  captured value : 125.3
+  decisions      : 3 in · 1 secret · 1 budget · 0 low-score · 1 scan
+
+  Allocation by directory
+  ────────────────────────────────────────────────────────────
+  <root>         ████████████████··············    632t  53.7% (2)
+  src            ██████████████················    546t  46.3% (1)
+
+  Allocation by language
+  ────────────────────────────────────────────────────────────
+  rust           ██████████████················    546t  46.3% (1)
+  python         ████████······················    321t  27.2% (1)
+  text           ████████······················    311t  26.4% (1)
+
+  Included files (fill order)
+  ────────────────────────────────────────────────────────────
+  # 0 src/budget_solver.rs                  546t  grade  83.3
+  # 1 README.md                             311t  grade  30.3
+  # 2 main.py                               321t  grade  11.7
+
+  Quarantined (secrets)
+  ────────────────────────────────────────────────────────────
+  ! config/secrets.yaml                aws-access-key-id
+```
+
+`src/budget_solver.rs` grades **83.3** — its path, body, imports, and symbol
+names all resonate with the query "budget solver knapsack", so it is poured
+first at fill rank 0.
+
+### 4. Weigh two pours against each other
+
+```text
+$ crucible compile --path fixtures/sample-repo --budget 600 \
+      --query "budget solver knapsack" --label tight \
+      --manifest examples/tight-manifest.json --out examples/tight-pack.txt
+crucible: poured 1 file(s), 546 tokens / 600 budget (91.0% util) via dp;
+          excluded secret=1 budget=3 low-score=0 scan=1
+
+$ crucible compare --a examples/tight-manifest.json --b examples/demo-manifest.json
+crucible compare :: tight → demo
+  tokens : 546 → 1178 (+632)
+  value  : 83.2 → 125.2 (+42.0)
+  util   : 91.0% → 98.2%
+  added (2):
+    + README.md
+    + main.py
+  removed (0):
+  retained: 1 file(s)
+```
+
+Loosening the budget from 600 to 1200 tokens *adds* two files and captures 42
+more grade-points — and crucially **removes nothing** that still fit. That
+monotonicity is asserted in the integration tests.
+
+---
+
+## A slice of the manifest
+
+Every grade is explained. Here is the entry for the winning file, verbatim:
+
+```json
+{
+  "path": "src/budget_solver.rs",
+  "decision": "include",
+  "tokens": 546,
+  "bytes": 1139,
+  "grade": 83.25,
+  "language": "rust",
+  "score_parts": {
+    "path": 16.6667,
+    "query": 33.2500,
+    "import": 20.0000,
+    "symbol": 13.3333
+  },
+  "fill_rank": 0,
+  "explanation": "included at fill rank 0 — grade 83.2 (path 16.7/query 33.2/import 20.0/symbol 13.3) for 546 tokens"
+}
+```
+
+And the quarantined file — note the secret is **redacted**, never echoed:
+
+```json
+{
+  "path": "config/secrets.yaml",
+  "decision": "exclude:secret",
+  "secrets": [
+    { "rule": "aws-access-key-id", "line": 8, "confidence": 0.97, "redacted": "AKIA…[redacted:20 chars]" }
+  ],
+  "explanation": "quarantined — 1 secret finding(s), highest confidence 0.97"
+}
+```
+
+---
+
+## Command reference
+
+```text
+crucible compile   Pour a context pack from a repository
+crucible scan      Report kept / rejected files from a scan
+crucible compare   Weigh two manifests against each other
+crucible help      Show usage
+```
+
+### `compile` flags
+
+| Flag           | Default    | Meaning                                      |
+|----------------|------------|----------------------------------------------|
+| `--path`       | `.`        | Repository root to scan.                     |
+| `--budget`     | `8000`     | Hard token budget — never exceeded.          |
+| `--query`      | *(none)*   | Free-text relevance query.                   |
+| `--min-score`  | `0`        | Drop files graded below this floor.          |
+| `--max-bytes`  | `524288`   | Skip files larger than this.                 |
+| `--label`      | `pour`     | Label recorded in the manifest.              |
+| `--out`        | *stdout*   | Where to write the pack content.             |
+| `--manifest`   | *(none)*   | Where to write the JSON manifest.            |
+
+With no query, `compile` grades on structural centrality (shallow, source-like
