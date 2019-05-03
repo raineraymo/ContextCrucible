@@ -262,3 +262,44 @@ mod tests {
         // and stops, but the exact DP finds {m1,m2} = 100 tokens, value 101.
         let items = vec![
             item("big", 100, 100.0),
+            item("m1", 70, 71.0),
+            item("m2", 30, 30.0),
+        ];
+        let s = solve(&items, 100);
+        assert!(s.tokens_used <= 100, "budget exceeded: {}", s.tokens_used);
+        assert_eq!(s.method, "dp");
+        assert_eq!(s.selected, vec!["m1", "m2"]);
+        assert!((s.value - 101.0).abs() < 1e-6, "value {}", s.value);
+    }
+
+    #[test]
+    fn dp_capacity_equal_budget_fills_exactly() {
+        // Two items that together exactly hit the budget must both be chosen
+        // over a single lower-value item.
+        let items = vec![
+            item("solo", 100, 90.0),
+            item("p1", 60, 60.0),
+            item("p2", 40, 40.0),
+        ];
+        let s = solve(&items, 100);
+        assert!(s.tokens_used <= 100);
+        assert_eq!(s.selected, vec!["p1", "p2"]);
+    }
+
+    #[test]
+    fn oversized_item_excluded() {
+        let items = vec![item("huge", 500, 100.0), item("ok", 10, 5.0)];
+        let s = solve(&items, 100);
+        assert_eq!(s.selected, vec!["ok"]);
+    }
+
+    #[test]
+    fn greedy_fallback_still_bounded() {
+        // Force greedy by making many tiny items with a huge budget grid.
+        let items: Vec<Item> = (0..50)
+            .map(|i| item(&format!("f{:03}", i), (i % 7 + 1) as u64, (i % 13) as f64))
+            .collect();
+        let s = solve(&items, 40);
+        assert!(s.tokens_used <= 40);
+    }
+// review note: budget math stays integer-only
