@@ -10,6 +10,3 @@ def allocate(total: int, weights: Dict[str, float]) -> Dict[str, int]:
     if denom <= 0:
         return {}
     return {name: int(total * (w / denom)) for name, w in weights.items()}
-
-
-def main() -> None:
