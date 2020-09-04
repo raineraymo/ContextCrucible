@@ -13,6 +13,3 @@ def allocate(total: int, weights: Dict[str, float]) -> Dict[str, int]:
 
 
 def main() -> None:
-    plan = allocate(1000, {"scan": 2.0, "score": 3.0, "budget": 5.0})
-    for task, share in sorted(plan.items()):
-        print(f"{task}: {share} tokens")
