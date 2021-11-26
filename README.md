@@ -69,3 +69,125 @@ point of relevance is traceable to a concrete token match you can read yourself.
    and Slack tokens, JWTs, and a generic *high-entropy assignment to a secret-
    looking name*. Placeholders like `changeme` or `${VAR}` are deliberately
    ignored. Any finding at or above 0.75 confidence quarantines the whole file.
+5. **budget** — the pour itself: an exact 0/1 knapsack solved by dynamic
+   programming over a quantised capacity grid, with a deterministic
+   value-density greedy fallback for very large inputs. The hard token bound is
+   enforced after reconstruction, always.
+6. **pack** — the selected files, concatenated in fill order with clear
+   delimiters, ready to paste into an agent.
+7. **manifest** — a byte-stable JSON audit trail: every include and exclude,
+   why, and at what token cost. See [`docs/PACK.md`](docs/PACK.md).
+
+---
+
+## Install &amp; build
+
+The core needs only a Rust toolchain (1.74 or newer). The explorer needs Node 18+.
+
+```sh
+# build the CLI
+cargo build --release        # binary at target/release/crucible
+
+# build the explorer
+cd explorer && npm install && npm run build && cd ..
+```
+
+Or lean on the `Makefile`:
+
+```sh
+make            # build + test the crate and the explorer
+make demo       # compile a pack from the fixture and render it
+make compare    # build two packs and weigh them
+```
+
+---
+
+## Quick pour
+
+Everything below is a **real transcript** captured from the bundled
+`fixtures/sample-repo`.
+
+### 1. Look at the ore — what does the scanner keep?
+
+```text
+$ crucible scan --path fixtures/sample-repo
+kept 5 file(s):
+  +      670b  README.md
+  +      354b  config/secrets.yaml
+  +      620b  main.py
+  +     1139b  src/budget_solver.rs
+  +      913b  src/strings.rs
+rejected 1 file(s):
+  - generated:suffix       web/bundle.min.js
+```
+
+The minified bundle is skimmed off as slag before it ever costs a token.
+
+### 2. Pour a pack under a 1200-token budget
+
+```text
+$ crucible compile --path fixtures/sample-repo --budget 1200 \
+      --query "budget solver knapsack" --label demo \
+      --out examples/demo-pack.txt --manifest examples/demo-manifest.json
+crucible: pack written to examples/demo-pack.txt
+crucible: manifest written to examples/demo-manifest.json
+crucible: poured 3 file(s), 1178 tokens / 1200 budget (98.2% util) via dp;
+          excluded secret=1 budget=1 low-score=0 scan=1
+```
+
+98.2% of the mold filled, by an *exact* DP, with the fake-credential file
+quarantined and the minified bundle never in contention.
+
+### 3. Visualise the pour with the explorer
+
+```text
+$ node explorer/dist/cli.js examples/demo-manifest.json
+╔══════════════════════════════════════════════════════════════╗
+║ contextcrucible pack :: demo                                  ║
+╚══════════════════════════════════════════════════════════════╝
+  query          : budget solver knapsack
+  solver         : dp
+  budget         : 1178 / 1200 tokens  (98.2% utilised)
+  captured value : 125.3
+  decisions      : 3 in · 1 secret · 1 budget · 0 low-score · 1 scan
+
+  Allocation by directory
+  ────────────────────────────────────────────────────────────
+  <root>         ████████████████··············    632t  53.7% (2)
+  src            ██████████████················    546t  46.3% (1)
+
+  Allocation by language
+  ────────────────────────────────────────────────────────────
+  rust           ██████████████················    546t  46.3% (1)
+  python         ████████······················    321t  27.2% (1)
+  text           ████████······················    311t  26.4% (1)
+
+  Included files (fill order)
+  ────────────────────────────────────────────────────────────
+  # 0 src/budget_solver.rs                  546t  grade  83.3
+  # 1 README.md                             311t  grade  30.3
+  # 2 main.py                               321t  grade  11.7
+
+  Quarantined (secrets)
+  ────────────────────────────────────────────────────────────
+  ! config/secrets.yaml                aws-access-key-id
+```
+
+`src/budget_solver.rs` grades **83.3** — its path, body, imports, and symbol
+names all resonate with the query "budget solver knapsack", so it is poured
+first at fill rank 0.
+
+### 4. Weigh two pours against each other
+
+```text
+$ crucible compile --path fixtures/sample-repo --budget 600 \
+      --query "budget solver knapsack" --label tight \
+      --manifest examples/tight-manifest.json --out examples/tight-pack.txt
+crucible: poured 1 file(s), 546 tokens / 600 budget (91.0% util) via dp;
+          excluded secret=1 budget=3 low-score=0 scan=1
+
+$ crucible compare --a examples/tight-manifest.json --b examples/demo-manifest.json
+crucible compare :: tight → demo
+  tokens : 546 → 1178 (+632)
+  value  : 83.2 → 125.2 (+42.0)
+  util   : 91.0% → 98.2%
