@@ -432,3 +432,65 @@ mod tests {
             query: "budget".into(),
             ..PackOptions::default()
         };
+        let pack = compile_from_scan(sr, &opts);
+        let included: Vec<&str> = pack
+            .included()
+            .iter()
+            .map(|e| e.candidate.rel_path.as_str())
+            .collect();
+        assert_eq!(included, vec!["budget.rs"]);
+    }
+
+    #[test]
+    fn manifest_is_valid_json_shape() {
+        let sr = scan_result(vec![scanned("a.rs", "fn main() {}\n")]);
+        let pack = compile_from_scan(sr, &PackOptions::default());
+        let m = render_manifest(&pack);
+        assert!(m.contains("\"summary\""));
+        assert!(m.contains("\"files\""));
+        assert!(m.trim_start().starts_with('{'));
+    }
+
+    #[test]
+    fn render_pack_delimits_files() {
+        let sr = scan_result(vec![scanned("a.rs", "fn main() {}\n")]);
+        let opts = PackOptions {
+            budget: 1000,
+            ..PackOptions::default()
+        };
+        let pack = compile_from_scan(sr, &opts);
+        let text = render_pack(&pack);
+        assert!(text.contains("BEGIN a.rs"));
+        assert!(text.contains("END a.rs"));
+    }
+
+    #[test]
+    fn scan_rejected_flows_to_manifest() {
+        let mut sr = scan_result(vec![scanned("a.rs", "fn main() {}\n")]);
+        sr.rejected.push(RejectedFile {
+            rel_path: "image.png".into(),
+            bytes: 1234,
+            reason: "binary:extension".into(),
+        });
+        let pack = compile_from_scan(sr, &PackOptions::default());
+        let m = render_manifest(&pack);
+        assert!(m.contains("image.png"));
+        assert!(m.contains("binary:extension"));
+    }
+
+    #[test]
+    fn low_score_floor_excludes() {
+        let sr = scan_result(vec![scanned("deep/nested/thing.rs", "fn q() {}\n")]);
+        let opts = PackOptions {
+            budget: 1000,
+            query: "budget".into(),
+            min_score: 5.0,
+            ..PackOptions::default()
+        };
+        let pack = compile_from_scan(sr, &opts);
+        assert!(pack
+            .entries
+            .iter()
+            .any(|e| e.decision == Decision::ExcludedLowScore));
+    }
+// review note: hard budget is a hard budget
