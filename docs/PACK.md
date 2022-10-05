@@ -55,3 +55,37 @@ The manifest is deterministic, pretty-printed JSON with three top-level keys.
 ### `files`
 
 An array, one object per **evaluated candidate** (files that survived scanning).
+Each entry explains its fate:
+
+```json
+{
+  "path": "src/budget_solver.rs",
+  "decision": "include",
+  "tokens": 546,
+  "bytes": 1139,
+  "grade": 83.25,
+  "language": "rust",
+  "score_parts": { "path": 16.67, "query": 33.25, "import": 20.0, "symbol": 13.33 },
+  "fill_rank": 0,
+  "explanation": "included at fill rank 0 — grade 83.2 ..."
+}
+```
+
+`decision` is one of:
+
+| Code                | Reason                                                  |
+|---------------------|---------------------------------------------------------|
+| `include`           | Selected by the budget solver.                          |
+| `exclude:secret`    | Quarantined — a likely credential was detected.         |
+| `exclude:budget`    | Lost the budget contest.                                |
+| `exclude:low-score` | Fell below `min_score`.                                 |
+| `exclude:scan`      | Rejected during scanning (also listed in `scan_rejected`). |
+
+`score_parts` always sums (clamped) to `grade`. When a file carries secrets a
+`secrets` array is present with `rule`, `line`, `confidence`, and a **redacted**
+excerpt — the raw secret is never written to the manifest.
+
+### `scan_rejected`
+
+Files rejected before scoring (binary, vendor, generated, oversized). Each has
+`path`, `bytes`, and a `scan_reason` such as `binary:extension`,
