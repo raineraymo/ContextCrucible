@@ -191,3 +191,126 @@ crucible compare :: tight → demo
   tokens : 546 → 1178 (+632)
   value  : 83.2 → 125.2 (+42.0)
   util   : 91.0% → 98.2%
+  added (2):
+    + README.md
+    + main.py
+  removed (0):
+  retained: 1 file(s)
+```
+
+Loosening the budget from 600 to 1200 tokens *adds* two files and captures 42
+more grade-points — and crucially **removes nothing** that still fit. That
+monotonicity is asserted in the integration tests.
+
+---
+
+## A slice of the manifest
+
+Every grade is explained. Here is the entry for the winning file, verbatim:
+
+```json
+{
+  "path": "src/budget_solver.rs",
+  "decision": "include",
+  "tokens": 546,
+  "bytes": 1139,
+  "grade": 83.25,
+  "language": "rust",
+  "score_parts": {
+    "path": 16.6667,
+    "query": 33.2500,
+    "import": 20.0000,
+    "symbol": 13.3333
+  },
+  "fill_rank": 0,
+  "explanation": "included at fill rank 0 — grade 83.2 (path 16.7/query 33.2/import 20.0/symbol 13.3) for 546 tokens"
+}
+```
+
+And the quarantined file — note the secret is **redacted**, never echoed:
+
+```json
+{
+  "path": "config/secrets.yaml",
+  "decision": "exclude:secret",
+  "secrets": [
+    { "rule": "aws-access-key-id", "line": 8, "confidence": 0.97, "redacted": "AKIA…[redacted:20 chars]" }
+  ],
+  "explanation": "quarantined — 1 secret finding(s), highest confidence 0.97"
+}
+```
+
+---
+
+## Command reference
+
+```text
+crucible compile   Pour a context pack from a repository
+crucible scan      Report kept / rejected files from a scan
+crucible compare   Weigh two manifests against each other
+crucible help      Show usage
+```
+
+### `compile` flags
+
+| Flag           | Default    | Meaning                                      |
+|----------------|------------|----------------------------------------------|
+| `--path`       | `.`        | Repository root to scan.                     |
+| `--budget`     | `8000`     | Hard token budget — never exceeded.          |
+| `--query`      | *(none)*   | Free-text relevance query.                   |
+| `--min-score`  | `0`        | Drop files graded below this floor.          |
+| `--max-bytes`  | `524288`   | Skip files larger than this.                 |
+| `--label`      | `pour`     | Label recorded in the manifest.              |
+| `--out`        | *stdout*   | Where to write the pack content.             |
+| `--manifest`   | *(none)*   | Where to write the JSON manifest.            |
+
+With no query, `compile` grades on structural centrality (shallow, source-like
+files first) so the budget still fills sensibly.
+
+---
+
+## How the budget solver decides
+
+The pour is a classic 0/1 knapsack: maximise captured relevance subject to a
+hard token bound. `contextcrucible` solves it **exactly** with dynamic
+programming whenever the problem fits a bounded grid (items × quantised
+budget buckets ≤ 4M cells), and falls back to a deterministic value-density
+greedy only for very large repositories. Both paths:
+
+- break ties by `(−score, tokens, path)` so runs are reproducible;
+- drop any item that alone exceeds the budget;
+- re-enforce the *true* token bound after reconstruction, trimming
+  lowest-value items if quantisation rounding nudged the pour over the line.
+
+The classic knapsack trap — greedily grabbing one big high-value item and
+missing a better pair — is covered by a unit test
+(`dp_beats_naive_greedy_on_classic_case`): with a budget of 100 the solver
+chooses two items summing to value 101 over a single item of value 100.
+
+---
+
+## The token assay, honestly
+
+Token counting here is a **heuristic**, and the code says so. It does not ship a
+vendor merge table and it does not claim to reproduce any specific tokenizer.
+What it gives you is *stable, explainable, monotone* estimates that are more
+than good enough to rank files and fill a budget — and identical on every run,
+every platform. If you need exact counts for a specific model, feed the emitted
+pack to that model's own tokenizer; the pack is plain text designed for exactly
+that hand-off.
+
+---
+
+## Project layout
+
+```
+contextcrucible/
+├── Cargo.toml               # crate manifest (bin: crucible, lib: contextcrucible)
+├── Makefile                 # build/test/demo/compare orchestration
+├── src/
+│   ├── lib.rs               # pipeline types: Candidate, Decision
+│   ├── main.rs              # the `crucible` CLI (hand-rolled arg parsing)
+│   ├── scan.rs              # ore extraction / slag rejection
+│   ├── tokens.rs            # token assay
+│   ├── score.rs             # four-signal relevance grading
+│   ├── secrets.rs           # credential spark tests + redaction
