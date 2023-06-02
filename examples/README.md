@@ -15,3 +15,20 @@ Worked examples produced from `fixtures/sample-repo`. Regenerate them with
 ## Reproduce
 
 Compile the demo pack (from the project root):
+
+```sh
+cargo run -- compile \
+  --path fixtures/sample-repo \
+  --budget 1200 \
+  --query "budget solver knapsack" \
+  --label demo \
+  --out examples/demo-pack.txt \
+  --manifest examples/demo-manifest.json
+```
+
+Visualise it with the explorer:
+
+```sh
+cd explorer && npm install && npm run build && cd ..
+node explorer/dist/cli.js examples/demo-manifest.json
+```
