@@ -355,3 +355,56 @@ fn parse_u64(s: &str, flag: &str) -> Result<u64, String> {
 
 fn parse_f64(s: &str, flag: &str) -> Result<f64, String> {
     s.parse::<f64>()
+        .map_err(|_| format!("{} expects a number, got `{}`", flag, s))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_compile_options() {
+        let args = vec![
+            "--path".into(),
+            "x".into(),
+            "--budget".into(),
+            "1234".into(),
+            "--query".into(),
+            "budget solver".into(),
+        ];
+        let o = Options::parse(&args).unwrap();
+        assert_eq!(o.budget, Some(1234));
+        assert_eq!(o.query.as_deref(), Some("budget solver"));
+    }
+
+    #[test]
+    fn rejects_unknown_option() {
+        let args = vec!["--nope".into()];
+        assert!(Options::parse(&args).is_err());
+    }
+
+    #[test]
+    fn extract_string_reads_label() {
+        let json = "{\n  \"label\": \"alpha\"\n}";
+        assert_eq!(extract_string(json, "label").as_deref(), Some("alpha"));
+    }
+
+    #[test]
+    fn extract_number_reads_tokens() {
+        let json = "{\n  \"tokens_used\": 4210\n}";
+        assert_eq!(extract_number(json, "tokens_used"), Some(4210.0));
+    }
+
+    #[test]
+    fn extract_included_finds_only_includes() {
+        let json = r#"{
+  "files": [
+    { "path": "a.rs", "decision": "include", "tokens": 3 },
+    { "path": "b.rs", "decision": "exclude:budget", "tokens": 3 }
+  ]
+}"#;
+        let set = extract_included(json);
+        assert!(set.contains("a.rs"));
+        assert!(!set.contains("b.rs"));
+    }
+// review note: keep CLI flags additive
