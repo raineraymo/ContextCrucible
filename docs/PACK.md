@@ -41,3 +41,38 @@ The manifest is deterministic, pretty-printed JSON with three top-level keys.
 | `version`            | string | Crate version that produced the pack.              |
 | `label`              | string | The `--label` given at compile time.               |
 | `query`              | string | The relevance query (may be empty).                |
+| `budget_tokens`      | int    | The hard token budget.                             |
+| `tokens_used`        | int    | Tokens actually consumed (always `<= budget`).     |
+| `budget_utilization` | float  | `tokens_used / budget_tokens`, `0..=1`.            |
+| `captured_value`     | float  | Sum of grades of included files.                   |
+| `min_score`          | float  | The relevance floor applied.                       |
+| `solver_method`      | string | `"dp"`, `"greedy"`, or `"empty"`.                  |
+| `counts`             | object | Per-disposition file counts (see below).           |
+
+`counts` has: `included`, `excluded_secret`, `excluded_budget`,
+`excluded_low_score`, `excluded_scan`.
+
+### `files`
+
+An array, one object per **evaluated candidate** (files that survived scanning).
+Each entry explains its fate:
+
+```json
+{
+  "path": "src/budget_solver.rs",
+  "decision": "include",
+  "tokens": 546,
+  "bytes": 1139,
+  "grade": 83.25,
+  "language": "rust",
+  "score_parts": { "path": 16.67, "query": 33.25, "import": 20.0, "symbol": 13.33 },
+  "fill_rank": 0,
+  "explanation": "included at fill rank 0 — grade 83.2 ..."
+}
+```
+
+`decision` is one of:
+
+| Code                | Reason                                                  |
+|---------------------|---------------------------------------------------------|
+| `include`           | Selected by the budget solver.                          |
