@@ -110,4 +110,4 @@ mod tests {
         let total = estimate_all(parts.iter().copied());
         assert_eq!(total, estimate("alpha") + estimate("beta"));
     }
-// review note: counting must be whitespace-stable
+}
