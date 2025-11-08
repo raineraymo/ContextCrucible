@@ -276,3 +276,45 @@ mod tests {
     #[test]
     fn detects_github_token() {
         let tok = format!("token: ghp_{}", "a".repeat(36));
+        let f = scan(&tok);
+        assert!(f.iter().any(|x| x.rule == "github-token"));
+    }
+
+    #[test]
+    fn detects_jwt() {
+        let jwt = "auth=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N";
+        let f = scan(jwt);
+        assert!(f.iter().any(|x| x.rule == "jwt"));
+    }
+
+    #[test]
+    fn generic_assignment_flagged() {
+        let f = scan("api_secret = \"9f8a7b6c5d4e3f2a1b0c9d8e\"\n");
+        assert!(f.iter().any(|x| x.rule == "generic-secret-assignment"));
+    }
+
+    #[test]
+    fn placeholder_not_flagged() {
+        let f = scan("api_secret = \"your-secret-here-changeme\"\n");
+        assert!(f.is_empty(), "placeholders must not be flagged: {:?}", f);
+    }
+
+    #[test]
+    fn normal_code_is_clean() {
+        let f = scan("let total = items.iter().map(|i| i.mass).sum();\n");
+        assert!(f.is_empty());
+    }
+
+    #[test]
+    fn redaction_hides_body() {
+        let r = redact("AKIAIOSFODNN7EXAMPLE");
+        assert!(r.starts_with("AKIA"));
+        assert!(!r.contains("IOSFODNN"));
+    }
+
+    #[test]
+    fn low_entropy_short_value_ignored() {
+        assert!(!high_entropy_value("short"));
+        assert!(!high_entropy_value("aaaaaaaaaaaaaaaa")); // one class only
+    }
+}
