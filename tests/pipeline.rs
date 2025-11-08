@@ -130,3 +130,33 @@ fn manifest_explains_every_candidate() {
     assert!(manifest.contains("\"solver_method\""));
 }
 
+#[test]
+fn larger_budget_captures_at_least_as_much_value() {
+    let small = compile(600, "budget solver", "small");
+    let large = compile(50_000, "budget solver", "large");
+    assert!(
+        large.captured_value >= small.captured_value,
+        "more budget should not reduce captured value: {} < {}",
+        large.captured_value,
+        small.captured_value
+    );
+    let cmp = compare::compare(&small, &large);
+    // Growing the budget can only add or retain files, never spontaneously
+    // remove one that still fits.
+    assert!(
+        cmp.removed.is_empty(),
+        "unexpected removals: {:?}",
+        cmp.removed
+    );
+}
+
+#[test]
+fn comparison_report_renders() {
+    let a = compile(600, "budget", "a");
+    let b = compile(3000, "budget", "b");
+    let cmp = compare::compare(&a, &b);
+    let report = cmp.to_report();
+    assert!(report.contains("crucible compare"));
+    let json = cmp.to_json();
+    assert!(json.contains("\"token_delta\""));
+}
