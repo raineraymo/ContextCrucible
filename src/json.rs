@@ -126,3 +126,26 @@ mod tests {
         let b_pos = s.find("\"b\"").unwrap();
         let a_pos = s.find("\"a\"").unwrap();
         assert!(b_pos < a_pos, "insertion order must be preserved");
+    }
+
+    #[test]
+    fn escapes_control_chars() {
+        let j = Json::s("line\nbreak\t\"q\"");
+        let s = j.to_pretty();
+        assert!(s.contains("\\n"));
+        assert!(s.contains("\\t"));
+        assert!(s.contains("\\\""));
+    }
+
+    #[test]
+    fn floats_are_fixed_precision() {
+        let j = Json::Float(0.5);
+        assert_eq!(j.to_pretty().trim(), "0.5000");
+    }
+
+    #[test]
+    fn empty_containers() {
+        assert_eq!(Json::Array(vec![]).to_pretty().trim(), "[]");
+        assert_eq!(Json::Object(vec![]).to_pretty().trim(), "{}");
+    }
+}
