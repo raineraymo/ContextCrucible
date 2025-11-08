@@ -291,3 +291,47 @@ fn file_name_of(path: &Path) -> String {
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default()
 }
+
+fn extension_of(lower_name: &str) -> Option<String> {
+    lower_name.rsplit_once('.').map(|(_, ext)| ext.to_string())
+}
+
+/// Map a relative path to a `Decision::ExcludedScan` for manifest merging.
+pub fn scan_decision(reason: &str) -> Decision {
+    Decision::ExcludedScan {
+        reason: reason.to_string(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn detects_nul_as_binary() {
+        assert!(is_binary_sample(&[b'a', 0, b'b'], 0.30));
+    }
+
+    #[test]
+    fn plain_text_is_not_binary() {
+        assert!(!is_binary_sample(b"fn main() {}\n", 0.30));
+    }
+
+    #[test]
+    fn utf8_multibyte_is_text() {
+        let s = "café — foundry ✨".as_bytes();
+        assert!(!is_binary_sample(s, 0.30));
+    }
+
+    #[test]
+    fn high_control_ratio_is_binary() {
+        let sample = vec![0x01u8; 100];
+        assert!(is_binary_sample(&sample, 0.30));
+    }
+
+    #[test]
+    fn extension_parsing() {
+        assert_eq!(extension_of("app.min.js"), Some("js".to_string()));
+        assert_eq!(extension_of("readme"), None);
+    }
+}
