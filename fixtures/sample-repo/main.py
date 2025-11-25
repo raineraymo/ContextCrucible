@@ -4,6 +4,3 @@
 from typing import Dict
 
 
-def allocate(total: int, weights: Dict[str, float]) -> Dict[str, int]:
-    """Distribute a total budget across weighted tasks."""
-    denom = sum(weights.values())
