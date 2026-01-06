@@ -49,3 +49,11 @@ All notable changes to contextcrucible are documented here. The format follows
 ### Added
 - budget solver (the mold) with per-section limits
 - JSON manifest output
+
+## [0.1.0] - 2016-12-08
+
+### Added
+- initial public release
+- repo scan + crude token estimate
+
+# draft note 1
