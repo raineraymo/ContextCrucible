@@ -265,3 +265,126 @@ crucible help      Show usage
 | `--manifest`   | *(none)*   | Where to write the JSON manifest.            |
 
 With no query, `compile` grades on structural centrality (shallow, source-like
+files first) so the budget still fills sensibly.
+
+---
+
+## How the budget solver decides
+
+The pour is a classic 0/1 knapsack: maximise captured relevance subject to a
+hard token bound. `contextcrucible` solves it **exactly** with dynamic
+programming whenever the problem fits a bounded grid (items × quantised
+budget buckets ≤ 4M cells), and falls back to a deterministic value-density
+greedy only for very large repositories. Both paths:
+
+- break ties by `(−score, tokens, path)` so runs are reproducible;
+- drop any item that alone exceeds the budget;
+- re-enforce the *true* token bound after reconstruction, trimming
+  lowest-value items if quantisation rounding nudged the pour over the line.
+
+The classic knapsack trap — greedily grabbing one big high-value item and
+missing a better pair — is covered by a unit test
+(`dp_beats_naive_greedy_on_classic_case`): with a budget of 100 the solver
+chooses two items summing to value 101 over a single item of value 100.
+
+---
+
+## The token assay, honestly
+
+Token counting here is a **heuristic**, and the code says so. It does not ship a
+vendor merge table and it does not claim to reproduce any specific tokenizer.
+What it gives you is *stable, explainable, monotone* estimates that are more
+than good enough to rank files and fill a budget — and identical on every run,
+every platform. If you need exact counts for a specific model, feed the emitted
+pack to that model's own tokenizer; the pack is plain text designed for exactly
+that hand-off.
+
+---
+
+## Project layout
+
+```
+contextcrucible/
+├── Cargo.toml               # crate manifest (bin: crucible, lib: contextcrucible)
+├── Makefile                 # build/test/demo/compare orchestration
+├── src/
+│   ├── lib.rs               # pipeline types: Candidate, Decision
+│   ├── main.rs              # the `crucible` CLI (hand-rolled arg parsing)
+│   ├── scan.rs              # ore extraction / slag rejection
+│   ├── tokens.rs            # token assay
+│   ├── score.rs             # four-signal relevance grading
+│   ├── secrets.rs           # credential spark tests + redaction
+│   ├── budget.rs            # exact DP knapsack + greedy fallback
+│   ├── pack.rs              # pipeline orchestration + manifest rendering
+│   ├── compare.rs           # weigh two packs
+│   └── json.rs              # dependency-free JSON writer
+├── tests/pipeline.rs        # end-to-end tests over the fixture repo
+├── fixtures/sample-repo/    # a mixed repo: relevant code, secrets, generated
+├── examples/                # reproducible packs + manifests
+├── explorer/                # TypeScript static explorer (node:test suite)
+│   └── src/{explorer,cli,explorer.test}.ts
+├── docs/
+│   ├── PACK.md              # pack + manifest format spec
+│   └── assets/*.svg         # two animated, fully local diagrams
+├── LICENSE · CHANGELOG.md
+└── .github/workflows/ci.yml # Rust matrix + explorer + determinism smoke test
+```
+
+---
+
+## Testing
+
+```sh
+cargo test                       # 65 Rust unit + integration tests
+cd explorer && npm test          # 9 explorer tests via node:test
+```
+
+The Rust suite covers token monotonicity, binary detection, every secret rule,
+each scoring signal, knapsack optimality and hard-bound enforcement, manifest
+shape, and full-pipeline determinism against the fixture. CI additionally runs a
+**determinism smoke test**: it compiles the same pack twice and `diff`s both the
+pack and the manifest to guarantee byte-for-byte reproducibility.
+
+---
+
+## Design principles
+
+- **Explainable over clever.** Every grade decomposes into signals you can read.
+- **Deterministic over fast.** Same input, same pour, same bytes — always.
+- **Safe by default.** A suspected secret excludes the file; nothing molten
+  splashes into the pour, and nothing secret is ever written to the manifest.
+- **Honest about limits.** Heuristic token counts and rule-based relevance, with
+  no dressed-up claims of semantic understanding.
+- **Dependency-free.** The core is pure Rust stdlib; the explorer's only dev
+  dependency is TypeScript itself.
+
+---
+
+## License
+
+[MIT](LICENSE) — melt it down and recast it however you like.
+
+---
+
+## Milestones
+
+- [x] **v0.1** - repo scan + crude token estimate (2016)
+- [x] **v0.2** - budget solver with per-section limits (2019)
+- [x] **v0.3** - relevance grade model, planted-secret fixtures (2021)
+- [x] **v0.4** - secret spark-test, hard-budget pack writer (2022)
+- [x] **v0.5** - language-aware scan, stamped manifests (2024)
+- [x] **v0.6** - compare mode, per-section budget breakdown (2025)
+- [x] **v1.0** - frozen manifest schema, offline budget explorer (2026)
+- [ ] **v1.1** - budget presets per model family (in progress)
+
+All milestones through v1.0 are shipped and verified by `cargo test` plus the
+explorer test suite. Open work lives under the [Unreleased] heading in the
+[CHANGELOG](CHANGELOG.md).
+
+---
+
+## License
+
+MIT - see [LICENSE](LICENSE).
+
+# draft note 2
