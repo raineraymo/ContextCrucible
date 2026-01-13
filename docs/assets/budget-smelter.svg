@@ -61,3 +61,16 @@
     <text x="470" y="222" fill="#ff8a80">over budget ✕</text>
 
     <!-- row 5: secrets.yaml, quarantined -->
+    <text x="30" y="256" fill="#6b7690">secrets.yaml</text>
+    <rect x="180" y="246" width="20" height="16" rx="3" fill="none" stroke="#ff5252" stroke-dasharray="4 3"/>
+    <text x="206" y="258" fill="#ff8a80" font-size="10">quarantined (secret) ✕</text>
+  </g>
+
+  <!-- rising spark to indicate active pour -->
+  <circle r="2.5" fill="#ffd54f">
+    <animate attributeName="opacity" values="0;1;0" dur="1.3s" repeatCount="indefinite"/>
+    <animateMotion path="M540 110 q10 -20 -5 -35" dur="1.3s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+
+# draft note 12
