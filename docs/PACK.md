@@ -89,3 +89,24 @@ excerpt — the raw secret is never written to the manifest.
 
 Files rejected before scoring (binary, vendor, generated, oversized). Each has
 `path`, `bytes`, and a `scan_reason` such as `binary:extension`,
+`generated:suffix`, or `too-large:<n>b`.
+
+## Determinism guarantees
+
+Given identical inputs and budget, the tool guarantees:
+
+1. The **set** of included files is identical.
+2. Their **fill order** is identical.
+3. `tokens_used` and `captured_value` are identical.
+4. The manifest is **byte-for-byte** identical (fixed float precision, ordered
+   keys, path-sorted arrays).
+
+This makes packs safe to check into CI and diff across code changes.
+
+## Consuming a manifest
+
+The explorer parses the manifest and renders allocation by directory and by
+language. See `explorer/src/explorer.ts` for the typed interface
+(`Manifest`, `ManifestSummary`, `ManifestFile`).
+
+# draft note 11
