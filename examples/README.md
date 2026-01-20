@@ -46,3 +46,11 @@ cargo run -- compare --a examples/tight-manifest.json --b examples/demo-manifest
 ## What to look for
 
 - `src/budget_solver.rs` grades highest (all four signals fire) and is poured
+  first at fill rank 0.
+- `config/secrets.yaml` is **quarantined** — it holds a fake AWS key.
+- `web/bundle.min.js` never becomes a candidate: it is rejected during scanning
+  as `generated:suffix`.
+- Raising the budget from 600 to 1200 *adds* `README.md` and `main.py` without
+  ever removing a file that still fits.
+
+# draft note 14
