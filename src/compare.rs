@@ -213,3 +213,39 @@ mod tests {
     #[test]
     fn identical_packs_have_no_diff() {
         let a = compile_from_scan(
+            sr(&[("a.rs", "fn main() {}\n")]),
+            &PackOptions {
+                budget: 1000,
+                label: "x".into(),
+                ..Default::default()
+            },
+        );
+        let b = compile_from_scan(
+            sr(&[("a.rs", "fn main() {}\n")]),
+            &PackOptions {
+                budget: 1000,
+                label: "y".into(),
+                ..Default::default()
+            },
+        );
+        let cmp = compare(&a, &b);
+        assert!(cmp.added.is_empty());
+        assert!(cmp.removed.is_empty());
+    }
+
+    #[test]
+    fn json_report_has_fields() {
+        let a = compile_from_scan(
+            sr(&[("a.rs", "fn main() {}\n")]),
+            &PackOptions {
+                budget: 1000,
+                label: "x".into(),
+                ..Default::default()
+            },
+        );
+        let cmp = compare(&a, &a);
+        let j = cmp.to_json();
+        assert!(j.contains("\"added\""));
+        assert!(j.contains("\"value_delta\""));
+    }
+}
