@@ -302,4 +302,4 @@ mod tests {
         let s = solve(&items, 40);
         assert!(s.tokens_used <= 40);
     }
-// review note: budget math stays integer-only
+}
