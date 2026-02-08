@@ -281,3 +281,44 @@ mod tests {
         let s = grade("a.rs", "fn smelt_ore() {}", &terms, false);
         assert!(s.symbol > 0.0);
     }
+
+    #[test]
+    fn extract_symbols_handles_multiple_langs() {
+        let syms = extract_symbols("fn alpha() {}\nclass Beta:\ndef gamma():");
+        assert!(syms.contains(&"alpha".to_string()));
+        assert!(syms.contains(&"beta".to_string()));
+        assert!(syms.contains(&"gamma".to_string()));
+    }
+
+    #[test]
+    fn extract_imports_handles_langs() {
+        let imports = extract_imports("use crate::budget;\nimport os\nfrom foundry import x");
+        assert!(imports.contains(&"budget".to_string()));
+        assert!(imports.contains(&"os".to_string()));
+        assert!(imports.contains(&"foundry".to_string()));
+    }
+
+    #[test]
+    fn import_relevance_via_stem() {
+        let terms = parse_query("budget");
+        assert!(import_relevance("src/budget.rs", "", &terms));
+    }
+
+    #[test]
+    fn no_query_uses_baseline() {
+        let s = grade("main.rs", "fn main() {}", &[], false);
+        assert!(s.total() > 0.0);
+        assert!(s.query == 0.0);
+    }
+
+    #[test]
+    fn total_is_clamped() {
+        let p = ScoreParts {
+            path: 40.0,
+            query: 40.0,
+            import: 40.0,
+            symbol: 40.0,
+        };
+        assert_eq!(p.total(), 100.0);
+    }
+}
