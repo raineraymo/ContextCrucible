@@ -493,4 +493,4 @@ mod tests {
             .iter()
             .any(|e| e.decision == Decision::ExcludedLowScore));
     }
-// review note: hard budget is a hard budget
+}
