@@ -8,3 +8,12 @@ labels: enhancement
 
 <!-- what can you not compile into a pack today? -->
 
+**Proposed behavior**
+
+<!-- concrete and deterministic; manifest changes must stay additive -->
+
+**Alternatives considered**
+
+<!-- other approaches you thought about -->
+
+# draft note 23
