@@ -12,3 +12,13 @@ labels: bug
 
 ```
 cargo run -- scan fixtures/sample-repo
+cargo run -- pack examples/tight-manifest.json
+```
+
+**Environment**
+
+- contextcrucible version:
+- Rust version:
+- OS:
+
+# draft note 21
