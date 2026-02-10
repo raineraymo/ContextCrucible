@@ -1,3 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Questions & discussions
+    url: https://github.com/silverhes/ContextCrucible/discussions
+    about: Budget model questions and manifest proposals
+
+# draft note 22
