@@ -7,3 +7,10 @@
 - [ ] `cargo fmt --check` and `cargo clippy --all-targets -- -D warnings` clean
 - [ ] `cargo test` green (scan/score change? fixture updated)
 - [ ] manifest schema change? additive-only, all renderers updated
+- [ ] explorer change? `npm ci && npm test` in `explorer/`
+
+## Reproducibility note
+
+<!-- same repo + manifest + budget must pour the same pack: include the fixture used -->
+
+# draft note 24
