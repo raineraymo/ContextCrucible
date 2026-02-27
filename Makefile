@@ -51,3 +51,23 @@ scan: build
 	$(CARGO) run --quiet -- scan --path $(FIXTURE)
 
 ## compare: build two packs and weigh them against each other
+compare: build
+	$(CARGO) run --quiet -- compile --path $(FIXTURE) --budget 600 \
+		--query "budget solver knapsack" --label tight \
+		--manifest examples/tight-manifest.json --out examples/tight-pack.txt
+	$(CARGO) run --quiet -- compile --path $(FIXTURE) --budget 1200 \
+		--query "budget solver knapsack" --label demo \
+		--manifest examples/demo-manifest.json --out examples/demo-pack.txt
+	$(CARGO) run --quiet -- compare --a examples/tight-manifest.json --b examples/demo-manifest.json
+
+## clean: remove build artefacts
+clean:
+	$(CARGO) clean
+	cd explorer && $(NPM) run clean || true
+
+## help: list targets
+help:
+	@echo "contextcrucible targets:"
+	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/## /  /'
+
+# draft note 28
