@@ -44,3 +44,24 @@ jobs:
       - name: Build
         run: npm run build
       - name: Test
+        run: npm test
+
+  determinism:
+    name: Determinism smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Two identical compiles must match
+        run: |
+          cargo run --quiet -- compile --path fixtures/sample-repo \
+            --budget 1200 --query "budget solver" --label ci \
+            --manifest a.json --out a.txt
+          cargo run --quiet -- compile --path fixtures/sample-repo \
+            --budget 1200 --query "budget solver" --label ci \
+            --manifest b.json --out b.txt
+          diff a.json b.json
+          diff a.txt b.txt
+          echo "deterministic ✔"
+
+# draft note 26
