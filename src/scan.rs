@@ -335,3 +335,5 @@ mod tests {
         assert_eq!(extension_of("readme"), None);
     }
 }
+
+// draft note 4
