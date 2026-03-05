@@ -322,3 +322,5 @@ mod tests {
         assert_eq!(p.total(), 100.0);
     }
 }
+
+// draft note 6
