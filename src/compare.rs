@@ -249,3 +249,5 @@ mod tests {
         assert!(j.contains("\"value_delta\""));
     }
 }
+
+// draft note 10
