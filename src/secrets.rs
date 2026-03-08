@@ -318,3 +318,5 @@ mod tests {
         assert!(!high_entropy_value("aaaaaaaaaaaaaaaa")); // one class only
     }
 }
+
+// draft note 7
