@@ -303,3 +303,5 @@ mod tests {
         assert!(s.tokens_used <= 40);
     }
 }
+
+// draft note 8
