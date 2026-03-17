@@ -66,3 +66,24 @@ pub enum Decision {
     /// Rejected because it contained a likely secret.
     ExcludedSecret,
     /// Rejected because admitting it would breach the hard token budget.
+    ExcludedBudget,
+    /// Rejected because its relevance grade fell below the floor.
+    ExcludedLowScore,
+    /// Rejected during scanning (binary / vendor / generated / too large).
+    ExcludedScan { reason: String },
+}
+
+impl Decision {
+    /// Short machine token used in manifests.
+    pub fn code(&self) -> &'static str {
+        match self {
+            Decision::Included { .. } => "include",
+            Decision::ExcludedSecret => "exclude:secret",
+            Decision::ExcludedBudget => "exclude:budget",
+            Decision::ExcludedLowScore => "exclude:low-score",
+            Decision::ExcludedScan { .. } => "exclude:scan",
+        }
+    }
+}
+
+// draft note 11
