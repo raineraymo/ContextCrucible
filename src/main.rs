@@ -407,4 +407,6 @@ mod tests {
         assert!(set.contains("a.rs"));
         assert!(!set.contains("b.rs"));
     }
-// review note: keep CLI flags additive
+}
+
+// draft note 12
