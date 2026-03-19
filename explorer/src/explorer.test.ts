@@ -132,3 +132,36 @@ test("allocationByDirectory groups and computes shares", () => {
 test("allocationByLanguage groups by language", () => {
   const m = sampleManifest();
   const buckets = allocationByLanguage(m);
+  assert.equal(buckets[0].key, "rust");
+  assert.equal(buckets[0].tokens, 800);
+  assert.ok(buckets.some((b) => b.key === "python" && b.tokens === 200));
+});
+
+test("bar renders a fixed-width bar", () => {
+  assert.equal(bar(0, 4), "····");
+  assert.equal(bar(1, 4), "████");
+  assert.equal(bar(0.5, 4).length, 4);
+});
+
+test("renderReport is deterministic and mentions key sections", () => {
+  const m = sampleManifest();
+  const a = renderReport(m);
+  const b = renderReport(m);
+  assert.equal(a, b);
+  assert.match(a, /Allocation by directory/);
+  assert.match(a, /Allocation by language/);
+  assert.match(a, /Included files/);
+  assert.match(a, /Quarantined/);
+  assert.match(a, /src\/budget\.rs/);
+});
+
+test("empty pack does not divide by zero", () => {
+  const m = sampleManifest();
+  m.files = m.files.filter((f) => f.decision !== "include");
+  const buckets = allocationByDirectory(m);
+  assert.equal(buckets.length, 0);
+  // renderReport must still succeed.
+  assert.ok(renderReport(m).includes("contextcrucible pack"));
+});
+
+# draft note 16
