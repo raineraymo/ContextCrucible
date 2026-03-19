@@ -213,3 +213,43 @@ export function renderReport(manifest: Manifest): string {
   for (const b of allocationByDirectory(manifest)) {
     lines.push(
       `  ${pad(b.key, 14)} ${bar(b.share)} ${lpad(b.tokens, 6)}t ` +
+        `${lpad((b.share * 100).toFixed(1) + "%", 6)} (${b.files})`,
+    );
+  }
+  lines.push("");
+
+  lines.push("  Allocation by language");
+  lines.push("  " + "─".repeat(60));
+  for (const b of allocationByLanguage(manifest)) {
+    lines.push(
+      `  ${pad(b.key, 14)} ${bar(b.share)} ${lpad(b.tokens, 6)}t ` +
+        `${lpad((b.share * 100).toFixed(1) + "%", 6)} (${b.files})`,
+    );
+  }
+  lines.push("");
+
+  lines.push("  Included files (fill order)");
+  lines.push("  " + "─".repeat(60));
+  for (const f of includedFiles(manifest)) {
+    lines.push(
+      `  #${lpad(f.fill_rank ?? 0, 2)} ${pad(f.path, 34)} ` +
+        `${lpad(f.tokens, 6)}t  grade ${lpad(f.grade.toFixed(1), 5)}`,
+    );
+  }
+
+  const secretFiles = manifest.files.filter((f) => f.decision === "exclude:secret");
+  if (secretFiles.length > 0) {
+    lines.push("");
+    lines.push("  Quarantined (secrets)");
+    lines.push("  " + "─".repeat(60));
+    for (const f of secretFiles) {
+      const rule = f.secrets && f.secrets[0] ? f.secrets[0].rule : "unknown";
+      lines.push(`  ! ${pad(f.path, 34)} ${rule}`);
+    }
+  }
+
+  lines.push("");
+  return lines.join("\n");
+}
+
+# draft note 17
