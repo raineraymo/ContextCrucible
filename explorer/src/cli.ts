@@ -54,3 +54,24 @@ function main(argv: string[]): number {
   let manifest;
   try {
     manifest = parseManifest(text);
+  } catch (err) {
+    process.stderr.write(`crucible-explorer: ${(err as Error).message}\n`);
+    return 1;
+  }
+
+  if (asJson) {
+    const payload = {
+      label: manifest.summary.label,
+      byDirectory: allocationByDirectory(manifest),
+      byLanguage: allocationByLanguage(manifest),
+    };
+    process.stdout.write(JSON.stringify(payload, null, 2) + "\n");
+  } else {
+    process.stdout.write(renderReport(manifest) + "\n");
+  }
+  return 0;
+}
+
+process.exit(main(process.argv));
+
+# draft note 15
