@@ -53,4 +53,4 @@ cargo run -- compare --a examples/tight-manifest.json --b examples/demo-manifest
 - Raising the budget from 600 to 1200 *adds* `README.md` and `main.py` without
   ever removing a file that still fits.
 
-# draft note 14
+# draft note 28
