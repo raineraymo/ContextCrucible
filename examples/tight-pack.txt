@@ -41,4 +41,4 @@ pub fn knapsack(items: &[(u64, f64)], budget: u64) -> f64 {
 ===== END src/budget_solver.rs =====
 
 
-# draft note 18
+# draft note 32
