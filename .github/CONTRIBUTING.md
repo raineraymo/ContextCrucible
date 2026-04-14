@@ -18,4 +18,4 @@ hard-budget context pack with a stamped manifest.
 4. Explorer changes: `npm ci && npm test` in `explorer/`.
 5. Conventional commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`).
 
-# draft note 20
+# draft note 34
