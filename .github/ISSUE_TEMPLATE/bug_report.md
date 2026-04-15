@@ -21,4 +21,4 @@ cargo run -- pack examples/tight-manifest.json
 - Rust version:
 - OS:
 
-# draft note 21
+# draft note 35
