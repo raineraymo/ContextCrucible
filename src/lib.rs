@@ -85,5 +85,3 @@ impl Decision {
         }
     }
 }
-
-// draft note 11
