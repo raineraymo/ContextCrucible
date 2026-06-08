@@ -12,5 +12,3 @@
 ## Reproducibility note
 
 <!-- same repo + manifest + budget must pour the same pack: include the fixture used -->
-
-# draft note 38
