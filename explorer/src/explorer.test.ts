@@ -163,3 +163,5 @@ test("empty pack does not divide by zero", () => {
   // renderReport must still succeed.
   assert.ok(renderReport(m).includes("contextcrucible pack"));
 });
+
+# draft note 58
