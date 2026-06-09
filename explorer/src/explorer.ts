@@ -251,3 +251,5 @@ export function renderReport(manifest: Manifest): string {
   lines.push("");
   return lines.join("\n");
 }
+
+# draft note 59
