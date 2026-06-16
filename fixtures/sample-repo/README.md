@@ -14,4 +14,4 @@ A tiny fixture repository consumed by contextcrucible's tests and examples.
 The point of the fixture is to give the compiler a mix of relevant code,
 irrelevant code, secrets, and generated files so decisions are observable.
 
-# draft note 19
+# draft note 61
