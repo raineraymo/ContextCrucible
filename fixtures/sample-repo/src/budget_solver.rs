@@ -34,4 +34,4 @@ pub fn knapsack(items: &[(u64, f64)], budget: u64) -> f64 {
     dp[budget as usize]
 }
 
-// draft note 22
+// draft note 64
