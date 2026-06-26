@@ -161,4 +161,4 @@ fn comparison_report_renders() {
     assert!(json.contains("\"token_delta\""));
 }
 
-// draft note 24
+// draft note 66
