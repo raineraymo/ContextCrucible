@@ -109,4 +109,4 @@ The explorer parses the manifest and renders allocation by directory and by
 language. See `explorer/src/explorer.ts` for the typed interface
 (`Manifest`, `ManifestSummary`, `ManifestFile`).
 
-# draft note 25
+# draft note 67
