@@ -26,5 +26,3 @@ pub fn title_case(s: &str) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
-
-// draft note 65
