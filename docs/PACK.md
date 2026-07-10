@@ -108,5 +108,3 @@ This makes packs safe to check into CI and diff across code changes.
 The explorer parses the manifest and renders allocation by directory and by
 language. See `explorer/src/explorer.ts` for the typed interface
 (`Manifest`, `ManifestSummary`, `ManifestFile`).
-
-# draft note 67
