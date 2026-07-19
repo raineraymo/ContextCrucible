@@ -17,3 +17,5 @@ hard-budget context pack with a stamped manifest.
 3. `cargo test` green; `make` targets from the Makefile where applicable.
 4. Explorer changes: `npm ci && npm test` in `explorer/`.
 5. Conventional commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`).
+
+# draft note 76
