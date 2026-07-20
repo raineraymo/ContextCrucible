@@ -63,3 +63,5 @@ jobs:
           diff a.json b.json
           diff a.txt b.txt
           echo "deterministic ✔"
+
+# draft note 82
