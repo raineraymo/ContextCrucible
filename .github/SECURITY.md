@@ -15,3 +15,5 @@ network calls. The spark-test reports secrets; it never transmits them. If you
 find a vulnerability (path traversal in scan mode, unsafe manifest parsing),
 open a private security advisory rather than a public issue. Expect a first
 response within 7 days.
+
+# draft note 81
