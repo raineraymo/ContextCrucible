@@ -69,3 +69,5 @@ clean:
 help:
 	@echo "contextcrucible targets:"
 	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/## /  /'
+
+# draft note 84
