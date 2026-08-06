@@ -149,5 +149,3 @@ mod tests {
         assert_eq!(Json::Object(vec![]).to_pretty().trim(), "{}");
     }
 }
-
-// draft note 89

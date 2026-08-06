@@ -408,5 +408,3 @@ mod tests {
         assert!(!set.contains("b.rs"));
     }
 }
-
-// draft note 54

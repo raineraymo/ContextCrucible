@@ -20,5 +20,3 @@ cargo run -- pack examples/tight-manifest.json
 - contextcrucible version:
 - Rust version:
 - OS:
-
-# draft note 77

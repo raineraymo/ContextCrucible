@@ -55,5 +55,3 @@ All notable changes to contextcrucible are documented here. The format follows
 ### Added
 - initial public release
 - repo scan + crude token estimate
-
-# draft note 85

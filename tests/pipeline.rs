@@ -160,5 +160,3 @@ fn comparison_report_renders() {
     let json = cmp.to_json();
     assert!(json.contains("\"token_delta\""));
 }
-
-// draft note 66

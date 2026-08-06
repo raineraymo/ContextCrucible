@@ -494,5 +494,3 @@ mod tests {
             .any(|e| e.decision == Decision::ExcludedLowScore));
     }
 }
-
-// draft note 51

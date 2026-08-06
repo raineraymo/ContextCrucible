@@ -83,5 +83,3 @@ if __name__ == "__main__":
     main()
 ===== END main.py =====
 
-
-# draft note 72

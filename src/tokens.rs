@@ -111,5 +111,3 @@ mod tests {
         assert_eq!(total, estimate("alpha") + estimate("beta"));
     }
 }
-
-// draft note 87
