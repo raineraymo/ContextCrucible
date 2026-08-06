@@ -386,5 +386,3 @@ explorer test suite. Open work lives under the [Unreleased] heading in the
 ## License
 
 MIT - see [LICENSE](LICENSE).
-
-# draft note 86
